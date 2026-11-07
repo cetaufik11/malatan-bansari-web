@@ -1,17 +1,17 @@
 :root[data-theme="dark"] {
-  --bg-primary: #0b1311;
-  --bg-secondary: rgba(17, 29, 26, 0.72);
-  --bg-card: rgba(21, 37, 33, 0.78);
-  --bg-card-hover: rgba(27, 48, 43, 0.88);
-  --border-color: rgba(52, 211, 153, 0.2);
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --accent-gold: #f59e0b;
-  --accent-gold-soft: rgba(245, 158, 11, 0.15);
-  --accent-emerald: #10b981;
-  --accent-emerald-bright: #34d399;
-  --accent-emerald-soft: rgba(16, 185, 129, 0.15);
+  --bg-primary: #0d1210;
+  --bg-secondary: rgba(20, 27, 24, 0.86);
+  --bg-card: rgba(24, 32, 29, 0.90);
+  --bg-card-hover: rgba(30, 40, 36, 0.95);
+  --border-color: rgba(220, 210, 192, 0.12);
+  --text-primary: #e8e3d9;
+  --text-secondary: #b6b0a4;
+  --text-muted: #868075;
+  --accent-gold: #cbb286;
+  --accent-gold-soft: rgba(203, 178, 134, 0.10);
+  --accent-emerald: #2c4c3e;
+  --accent-emerald-bright: #a3b6ab;
+  --accent-emerald-soft: rgba(163, 182, 171, 0.10);
   --shadow-lg: 0 20px 45px rgba(0, 0, 0, 0.45);
 }
 
@@ -87,6 +87,8 @@ body.gate-locked {
   --bell-sway: 0deg;
   --bg-shift-x: 0px;
   --bg-shift-y: 0px;
+  --pull-y: 0px;
+  --pull-progress: 0;
   background: radial-gradient(ellipse 95% 85% at 50% 38%, #121d19 0%, #09100e 58%, #050807 100%);
   width: 100%;
   min-height: 100vh;
@@ -287,30 +289,70 @@ body.gate-locked {
   color: rgba(255, 244, 224, 0.88);
 }
 
-/* Struktur Lonceng 3D Presisi dengan Ayunan Natural */
+/* Struktur Lonceng 3D Presisi dengan Fisika Tarik ke Bawah (Pull-Down) */
 .bell-wrapper {
   position: relative;
   z-index: 4;
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
-  margin-bottom: 30px;
+  cursor: grab;
+  margin-bottom: 24px;
   outline: none;
   transform-origin: 50% -260px;
-  transform: rotate(var(--bell-sway, 0deg));
-  animation: gentleBellPendulum 7s ease-in-out infinite alternate;
-  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(calc(var(--pull-y, 0px) * 0.45)) rotate(var(--bell-sway, 0deg));
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+  touch-action: none;
 }
 
-@keyframes gentleBellPendulum {
-  0% { transform: rotate(calc(var(--bell-sway, 0deg) - 0.65deg)); }
-  100% { transform: rotate(calc(var(--bell-sway, 0deg) + 0.65deg)); }
+.bell-scene.is-pulling .bell-wrapper {
+  cursor: grabbing;
+  transition: none;
 }
 
-.bell-wrapper:active,
+.bell-scene.pull-hint-bounce .bell-wrapper {
+  animation: hintPullDownBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes hintPullDownBounce {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(16px); }
+  100% { transform: translateY(0); }
+}
+
 .bell-scene.lit .bell-wrapper {
   transform: translateY(4px) rotate(0deg);
+}
+
+/* Tali Tarik & Bandul Bawah Bohlam */
+.bell-pull-cord {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -26px;
+  z-index: 5;
+  transform: translateY(calc(var(--pull-y, 0px) * 0.55));
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+}
+
+.bell-scene.is-pulling .bell-pull-cord {
+  transition: none;
+}
+
+.pull-cord-line {
+  width: 2px;
+  height: calc(36px + var(--pull-y, 0px) * 0.45);
+  background: linear-gradient(180deg, rgba(255, 232, 180, 0.65) 0%, rgba(185, 160, 120, 0.45) 100%);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+}
+
+.pull-cord-knob {
+  width: 14px;
+  height: 20px;
+  border-radius: 7px;
+  background: radial-gradient(circle at 35% 30%, #d6bf94, #6e5835 70%, #2a2012 100%);
+  border: 1px solid rgba(255, 238, 200, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.85), 0 0 12px rgba(255, 215, 140, 0.2);
 }
 
 .bell-svg {
@@ -329,28 +371,28 @@ body.gate-locked {
     drop-shadow(0 28px 95px rgba(255, 198, 98, 0.62));
 }
 
-/* Transisi Pijar Bohlam yang Organik & Sangat Terang Saat Menyala */
+/* Transisi Pijar Bohlam yang Mengikuti Tarikan Tangan (Saat Awal Redup, Makin Ditarik Makin Terang) */
 .svg-inner-lit {
-  opacity: 0.22;
-  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s ease;
+  opacity: calc(0.06 + var(--pull-progress, 0) * 0.85);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s ease;
 }
 
 .svg-clapper-lit {
-  opacity: 0.28;
-  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s ease;
+  opacity: calc(0.08 + var(--pull-progress, 0) * 0.88);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s ease;
 }
 
 .svg-clapper-dark {
-  opacity: 0.85;
-  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: calc(0.95 - var(--pull-progress, 0) * 0.85);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.bell-wrapper:hover .svg-inner-lit {
-  opacity: 0.58;
-}
-
-.bell-wrapper:hover .svg-clapper-lit {
-  opacity: 0.68;
+.bell-scene.is-pulling .svg-inner-lit,
+.bell-scene.is-pulling .svg-clapper-lit,
+.bell-scene.is-pulling .svg-clapper-dark,
+.bell-scene.is-pulling .spotlight,
+.bell-scene.is-pulling .spotlight-core {
+  transition: none;
 }
 
 /* Sorotan Cahaya ke Bawah (Dual-Layer Volumetric Spotlight Terang & Halus) */
@@ -367,9 +409,9 @@ body.gate-locked {
     transparent 86%
   );
   filter: blur(26px);
-  opacity: 0.26;
+  opacity: calc(0.05 + var(--pull-progress, 0) * 0.9);
   pointer-events: none;
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1;
 }
 
@@ -385,33 +427,29 @@ body.gate-locked {
     transparent 82%
   );
   filter: blur(14px);
-  opacity: 0.2;
+  opacity: calc(0.04 + var(--pull-progress, 0) * 0.9);
   pointer-events: none;
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 2;
 }
 
-.bell-wrapper:hover .spotlight,
-.bell-wrapper:hover .spotlight-core {
-  opacity: 0.62;
-}
-
-/* Tombol Interaktif yang Halus & Natural */
+/* Tombol / Petunjuk Tarik yang Halus & Natural */
 .glow-btn {
   position: relative;
   z-index: 5;
   padding: 13px 32px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.68);
+  color: rgba(235, 230, 220, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.14);
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
   font-size: 15px;
   font-weight: 500;
   letter-spacing: 0.2px;
-  cursor: pointer;
+  cursor: grab;
+  touch-action: none;
   backdrop-filter: blur(10px);
-  opacity: 0.78;
+  opacity: 0.85;
   transition:
     transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 0.75s cubic-bezier(0.16, 1, 0.3, 1),
@@ -2632,6 +2670,80 @@ h1, h2, h3, .serif {
 :root[data-theme="light"] .card-popup-trigger {
   color: #14532d;
   font-weight: 800;
+}
+
+/* =========================================================================
+   HARMONISASI WARNA FONT & ELEMEN MODE GELAP (LOW-CONTRAST WARM EDITORIAL)
+   ========================================================================= */
+:root[data-theme="dark"] h1,
+:root[data-theme="dark"] h2,
+:root[data-theme="dark"] h3,
+:root[data-theme="dark"] h4 {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+:root[data-theme="dark"] .hero h1 em {
+  color: #dcc59c;
+  font-style: italic;
+}
+
+:root[data-theme="dark"] .pill-gold,
+:root[data-theme="dark"] .pill-emerald,
+:root[data-theme="dark"] .tl-year,
+:root[data-theme="dark"] .spot-tag,
+:root[data-theme="dark"] .theory-tag {
+  background: rgba(220, 210, 192, 0.06);
+  color: var(--accent-gold);
+  border: 1px solid rgba(220, 210, 192, 0.16);
+  font-weight: 600;
+}
+
+:root[data-theme="dark"] .tl-badge,
+:root[data-theme="dark"] .archive-cat,
+:root[data-theme="dark"] .stat-item strong,
+:root[data-theme="dark"] .card-popup-trigger,
+:root[data-theme="dark"] .profile-header,
+:root[data-theme="dark"] .profile-header span {
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+:root[data-theme="dark"] .btn-primary,
+:root[data-theme="dark"] .filter-btn.active,
+:root[data-theme="dark"] .tab-btn.active {
+  background: linear-gradient(135deg, #2d4d3f, #21392f);
+  color: #ece7de;
+  border: 1px solid rgba(203, 178, 134, 0.32);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="dark"] .btn-secondary {
+  background: rgba(203, 178, 134, 0.09);
+  color: var(--accent-gold);
+  border: 1px solid rgba(203, 178, 134, 0.24);
+}
+
+:root[data-theme="dark"] .ui-popup-card {
+  background: #161f1c;
+  color: var(--text-primary);
+  border: 1px solid rgba(220, 210, 192, 0.22);
+}
+
+:root[data-theme="dark"] .ui-popup-pill,
+:root[data-theme="dark"] .ui-popup-subpill {
+  background: rgba(220, 210, 192, 0.07);
+  color: var(--accent-gold);
+  border: 1px solid rgba(220, 210, 192, 0.18);
+  font-weight: 600;
+}
+
+:root[data-theme="dark"] .toast {
+  background: #17211d;
+  color: var(--text-primary);
+  border: 1px solid rgba(220, 210, 192, 0.22);
+  border-left: 4px solid var(--accent-gold);
+  font-weight: 600;
 }
 
 @media (prefers-reduced-motion: reduce) {

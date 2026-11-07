@@ -272,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// 1. Atmospheric Twilight Sindoro & 3D Bell Spotlight Gate
+// 1. Atmospheric Twilight Sindoro & 3D Bell Spotlight Gate (Pull-Down Interactive Physics)
 function initKayonSplitGate() {
   const gate = document.getElementById("kayonSplitGate");
   const scene = document.getElementById("bellScene");
@@ -284,15 +284,19 @@ function initKayonSplitGate() {
 
   let isLit = false;
   let isGateOpened = false;
+  let isPulling = false;
+  let startY = 0;
+  let currentPullY = 0;
+  const PULL_THRESHOLD = 46; // Jarak tarik ke bawah (px) agar saklar lampu menyala
 
-  // Smooth interactive parallax on mouse move so the scene feels alive and organic
+  // Smooth interactive parallax on mouse move when not pulling
   scene.addEventListener("pointermove", (e) => {
-    if (isLit) return;
+    if (isLit || isPulling) return;
     const nx = (e.clientX / window.innerWidth) - 0.5;
     const ny = (e.clientY / window.innerHeight) - 0.5;
-    scene.style.setProperty("--bell-sway", `${(-nx * 2.4).toFixed(2)}deg`);
-    scene.style.setProperty("--bg-shift-x", `${(-nx * 16).toFixed(1)}px`);
-    scene.style.setProperty("--bg-shift-y", `${(-ny * 10).toFixed(1)}px`);
+    scene.style.setProperty("--bell-sway", `${(-nx * 2.2).toFixed(2)}deg`);
+    scene.style.setProperty("--bg-shift-x", `${(-nx * 14).toFixed(1)}px`);
+    scene.style.setProperty("--bg-shift-y", `${(-ny * 9).toFixed(1)}px`);
   });
 
   function openGateIntoMainContent() {
@@ -303,39 +307,110 @@ function initKayonSplitGate() {
     showToast("Selamat datang di Portal Sejarah & Warisan Dusun Malatan");
   }
 
-  function igniteBrightLamp() {
+  function igniteBrightLampAndEnter() {
     if (isLit) return;
     isLit = true;
+    isPulling = false;
+    scene.classList.remove("is-pulling", "pull-ready");
     scene.style.setProperty("--bell-sway", "0deg");
+    scene.style.setProperty("--pull-y", "0px");
+    scene.style.setProperty("--pull-progress", "1");
     scene.classList.add("lit");
     gate.classList.add("lamp-lit");
-    if (btnText) btnText.textContent = "Masuk ke Portal Dusun Malatan →";
+    if (btnText) btnText.textContent = "✨ Lampu Menyala · Memasuki Portal...";
+    setTimeout(openGateIntoMainContent, 1250);
   }
 
-  function activateLamp(e) {
-    if (e && e.cancelable) e.preventDefault();
-    if (!isLit) {
-      igniteBrightLamp();
-      if (btnText) btnText.textContent = "Memasuki Halaman...";
-      setTimeout(openGateIntoMainContent, 850);
+  function startPull(clientY, e) {
+    if (isLit) {
+      openGateIntoMainContent();
       return;
     }
-    if (btnText) btnText.textContent = "Memasuki Halaman...";
-    setTimeout(openGateIntoMainContent, 320);
+    if (e && e.cancelable) e.preventDefault();
+    isPulling = true;
+    startY = clientY;
+    currentPullY = 0;
+    scene.classList.add("is-pulling");
+    scene.classList.remove("pull-hint-bounce");
+    if (btnText) btnText.textContent = "↓ Tarik Terus ke Bawah...";
   }
 
-  // Otomatis menyalakan lampu sorot dengan terang saat halaman dimuat
-  setTimeout(igniteBrightLamp, 550);
+  function movePull(clientY) {
+    if (!isPulling || isLit) return;
+    const rawDelta = Math.max(0, clientY - startY);
+    // Elastic damping past threshold
+    const dampedY = rawDelta <= PULL_THRESHOLD
+      ? rawDelta
+      : PULL_THRESHOLD + (rawDelta - PULL_THRESHOLD) * 0.45;
+    currentPullY = Math.min(105, dampedY);
+    const progress = Math.min(1, currentPullY / PULL_THRESHOLD);
+
+    scene.style.setProperty("--pull-y", `${currentPullY.toFixed(1)}px`);
+    scene.style.setProperty("--pull-progress", progress.toFixed(3));
+    scene.classList.toggle("pull-ready", currentPullY >= PULL_THRESHOLD);
+
+    if (currentPullY >= PULL_THRESHOLD + 24) {
+      // Otomatis klik saklar begitu ditarik cukup jauh ke bawah
+      igniteBrightLampAndEnter();
+      return;
+    }
+
+    if (btnText) {
+      if (currentPullY >= PULL_THRESHOLD) {
+        btnText.textContent = "✨ Lepaskan Tarikan Untuk Menyalakan";
+      } else {
+        const pct = Math.max(5, Math.round(progress * 100));
+        btnText.textContent = `↓ Tarik ke Bawah (${pct}%)`;
+      }
+    }
+  }
+
+  function endPull() {
+    if (!isPulling || isLit) return;
+    isPulling = false;
+    scene.classList.remove("is-pulling", "pull-ready");
+
+    if (currentPullY >= PULL_THRESHOLD) {
+      igniteBrightLampAndEnter();
+    } else {
+      // Belum ditarik cukup jauh (misal hanya diklik): pantulkan kembali ke atas
+      scene.style.setProperty("--pull-y", "0px");
+      scene.style.setProperty("--pull-progress", "0");
+      scene.classList.remove("pull-hint-bounce");
+      void scene.offsetWidth;
+      scene.classList.add("pull-hint-bounce");
+      if (btnText) btnText.textContent = "↓ Tarik Lampu / Tali ke Bawah Untuk Menyalakan";
+    }
+    currentPullY = 0;
+  }
 
   [bellTrigger, holdBtn].forEach((el) => {
-    el.addEventListener("click", activateLamp);
-    el.addEventListener("touchstart", activateLamp, { passive: false });
+    el.addEventListener("mousedown", (e) => startPull(e.clientY, e));
+    el.addEventListener("touchstart", (e) => {
+      if (e.touches && e.touches[0]) startPull(e.touches[0].clientY, e);
+    }, { passive: false });
+
     el.addEventListener("keydown", (e) => {
-      if (e.code === "Space" || e.code === "Enter") {
-        activateLamp(e);
+      if (e.code === "ArrowDown" || e.code === "Space" || e.code === "Enter") {
+        e.preventDefault();
+        scene.style.setProperty("--pull-y", "52px");
+        scene.style.setProperty("--pull-progress", "1");
+        setTimeout(igniteBrightLampAndEnter, 240);
       }
     });
   });
+
+  window.addEventListener("mousemove", (e) => movePull(e.clientY));
+  window.addEventListener("touchmove", (e) => {
+    if (isPulling && e.touches && e.touches[0]) {
+      if (e.cancelable) e.preventDefault();
+      movePull(e.touches[0].clientY);
+    }
+  }, { passive: false });
+
+  window.addEventListener("mouseup", endPull);
+  window.addEventListener("touchend", endPull);
+  window.addEventListener("touchcancel", endPull);
 }
 
 // 2. 10-Slat 3D Bamboo Rigen Louver Shutter & Multi-Page Navigation
