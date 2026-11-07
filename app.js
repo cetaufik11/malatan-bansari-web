@@ -270,9 +270,9 @@ document.addEventListener("DOMContentLoaded", () => {
   initMultiPageTobaccoNavigation();
   if (!IS_MOBILE_DEVICE) {
     initInteractive3DTilt();
-    initMicroParallax();
-    init3DTobaccoLightTheme();
   }
+  initMicroParallax();
+  init3DTobaccoLightTheme();
   initDetailPopupModal();
 
   document.getElementById("printArchiveBtn").addEventListener("click", () => {
@@ -545,7 +545,7 @@ function initBidirectionalScrollAnimations() {
   const navLinks = document.querySelectorAll(".nav-links a");
   const sections = document.querySelectorAll("section[id]");
 
-  // Setup IntersectionObserver (on mobile, unobserve once in view for 60fps native scrolling)
+  // Setup IntersectionObserver (aktif dua arah saat scroll turun & naik di HP maupun Desktop)
   scrollObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -553,10 +553,7 @@ function initBidirectionalScrollAnimations() {
         if (entry.isIntersecting) {
           el.classList.add("in-view");
           el.classList.remove("out-bottom", "out-top");
-          if (IS_MOBILE_DEVICE) {
-            scrollObserver.unobserve(el);
-          }
-        } else if (!IS_MOBILE_DEVICE) {
+        } else {
           el.classList.remove("in-view");
           if (entry.boundingClientRect.top < 0) {
             el.classList.add("out-top");
@@ -1471,14 +1468,15 @@ function init3DTobaccoLightTheme() {
   const heroBox = document.getElementById("heroTobacco3DBox");
 
   if (garden) {
-    const plantConfigs = [
-      { left: "-2%", bottom: "-35px", w: "300px", h: "490px", z: "40px", dur: "6.8s", delay: "0s", leaves: 11 },
+    const allPlantConfigs = [
+      { left: "-2%", bottom: "-35px", w: "300px", h: "490px", z: "40px", dur: "6.8s", delay: "0s", leaves: IS_MOBILE_DEVICE ? 6 : 11 },
+      { left: "79%", bottom: "-32px", w: "310px", h: "500px", z: "50px", dur: "7.2s", delay: "-0.8s", leaves: IS_MOBILE_DEVICE ? 6 : 11 },
       { left: "9%", bottom: "-45px", w: "230px", h: "380px", z: "-50px", dur: "8.2s", delay: "-1.5s", leaves: 9 },
-      { left: "79%", bottom: "-32px", w: "310px", h: "500px", z: "50px", dur: "7.2s", delay: "-0.8s", leaves: 11 },
       { left: "69%", bottom: "-48px", w: "225px", h: "370px", z: "-60px", dur: "8.6s", delay: "-2.4s", leaves: 9 },
       { left: "22%", bottom: "-65px", w: "185px", h: "300px", z: "-110px", dur: "9.1s", delay: "-3.1s", leaves: 8 },
       { left: "58%", bottom: "-62px", w: "190px", h: "310px", z: "-95px", dur: "8.9s", delay: "-1.9s", leaves: 8 }
     ];
+    const plantConfigs = IS_MOBILE_DEVICE ? allPlantConfigs.slice(0, 2) : allPlantConfigs;
 
     let gardenHtml = plantConfigs.map((cfg, idx) => `
       <div class="tobacco-3d-plant"
@@ -1489,8 +1487,9 @@ function init3DTobaccoLightTheme() {
       </div>
     `).join("");
 
-    // Add 22 sunlit golden pollen & morning dew motes
-    for (let m = 0; m < 22; m++) {
+    // Add sunlit golden pollen & morning dew motes (8 on mobile, 22 on desktop)
+    const moteCount = IS_MOBILE_DEVICE ? 8 : 22;
+    for (let m = 0; m < moteCount; m++) {
       const mx = 4 + ((m * 43) % 92);
       const my = 14 + ((m * 31) % 78);
       const msz = 5 + (m % 4) * 2;
@@ -1505,14 +1504,15 @@ function init3DTobaccoLightTheme() {
 
     garden.innerHTML = gardenHtml;
 
-    // Interactive 3D perspective response to cursor movement
-    window.addEventListener("mousemove", (e) => {
-      if (document.documentElement.getAttribute("data-theme") !== "light") return;
-      const nx = e.clientX / window.innerWidth - 0.5;
-      const ny = e.clientY / window.innerHeight - 0.5;
-      garden.style.setProperty("--scene-ry", `${(nx * 24).toFixed(1)}deg`);
-      garden.style.setProperty("--scene-rx", `${(-ny * 10).toFixed(1)}deg`);
-    }, { passive: true });
+    if (!IS_MOBILE_DEVICE) {
+      window.addEventListener("mousemove", (e) => {
+        if (document.documentElement.getAttribute("data-theme") !== "light") return;
+        const nx = e.clientX / window.innerWidth - 0.5;
+        const ny = e.clientY / window.innerHeight - 0.5;
+        garden.style.setProperty("--scene-ry", `${(nx * 24).toFixed(1)}deg`);
+        garden.style.setProperty("--scene-rx", `${(-ny * 10).toFixed(1)}deg`);
+      }, { passive: true });
+    }
   }
 
   // Interactive 360° 3D Tobacco Specimen Turntable inside Hero Card
@@ -1520,24 +1520,32 @@ function init3DTobaccoLightTheme() {
     specimenViewport.innerHTML = `
       <div class="specimen-3d-turntable" id="specimenTurntable">
         <div class="specimen-3d-pedestal"></div>
-        ${build3DTobaccoPlantMarkup(99, 12)}
+        ${build3DTobaccoPlantMarkup(99, IS_MOBILE_DEVICE ? 8 : 12)}
       </div>
     `;
 
     const turntable = document.getElementById("specimenTurntable");
     if (heroBox && turntable) {
-      heroBox.addEventListener("mousemove", (e) => {
+      const rotateSpecimen = (clientX, clientY) => {
         const rect = heroBox.getBoundingClientRect();
-        const nx = (e.clientX - rect.left) / rect.width - 0.5;
-        const ny = (e.clientY - rect.top) / rect.height - 0.5;
+        const nx = (clientX - rect.left) / rect.width - 0.5;
+        const ny = (clientY - rect.top) / rect.height - 0.5;
         turntable.style.animation = "none";
         turntable.style.setProperty("--spec-ry", `${(nx * 190).toFixed(1)}deg`);
         turntable.style.setProperty("--spec-rx", `${(-8 - ny * 26).toFixed(1)}deg`);
-      });
+      };
+
+      heroBox.addEventListener("mousemove", (e) => rotateSpecimen(e.clientX, e.clientY), { passive: true });
+      heroBox.addEventListener("touchmove", (e) => {
+        if (e.touches && e.touches[0]) rotateSpecimen(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
 
       heroBox.addEventListener("mouseleave", () => {
         turntable.style.removeProperty("animation");
-      });
+      }, { passive: true });
+      heroBox.addEventListener("touchend", () => {
+        turntable.style.removeProperty("animation");
+      }, { passive: true });
     }
   }
 }

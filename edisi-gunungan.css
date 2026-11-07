@@ -308,7 +308,7 @@ h1, h2, h3, .serif {
   color: rgba(255, 244, 224, 0.88);
 }
 
-/* Struktur Lonceng 3D Presisi dengan Fisika Tarik ke Bawah (Pull-Down) */
+/* Struktur Lonceng 3D Presisi dengan Fisika Tarik ke Bawah (Pull-Down) & Ayunan Halus */
 .bell-wrapper {
   position: relative;
   z-index: 4;
@@ -319,13 +319,21 @@ h1, h2, h3, .serif {
   margin-bottom: 24px;
   outline: none;
   transform-origin: 50% -260px;
-  transform: translateY(calc(var(--pull-y, 0px) * 0.45)) rotate(var(--bell-sway, 0deg));
+  transform: translate3d(0, calc(var(--pull-y, 0px) * 0.45), 0) rotate(var(--bell-sway, 0deg));
+  animation: gentleBellPendulum 6.5s ease-in-out infinite alternate;
   transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
   touch-action: none;
+  will-change: transform;
+}
+
+@keyframes gentleBellPendulum {
+  0% { transform: translate3d(0, calc(var(--pull-y, 0px) * 0.45), 0) rotate(calc(var(--bell-sway, 0deg) - 0.7deg)); }
+  100% { transform: translate3d(0, calc(var(--pull-y, 0px) * 0.45), 0) rotate(calc(var(--bell-sway, 0deg) + 0.7deg)); }
 }
 
 .bell-scene.is-pulling .bell-wrapper {
   cursor: grabbing;
+  animation: none;
   transition: none;
 }
 
@@ -2063,10 +2071,9 @@ h1, h2, h3, .serif {
   }
   .babad-stage-main {
     padding: 16px 16px 36px;
-    perspective: none;
   }
 
-  /* Optimasi Performa GPU HP (Anti-Lag & 60fps Smooth Scrolling) */
+  /* Optimasi Performa GPU HP: Semua Animasi Tetap Bergerak Lancar 60fps Tanpa Beban Blur */
   .bento-main-card,
   .bento-side-card,
   .section-header,
@@ -2085,15 +2092,23 @@ h1, h2, h3, .serif {
     -webkit-backdrop-filter: none !important;
   }
 
-  .Floating3DCultureStage,
+  /* Kabut, Kunang-kunang, Panorama, Watermark & Rigen 3D tetap bergerak halus menggunakan GPU transform */
   .bell-mist-drift,
-  .bell-fireflies {
-    display: none !important;
+  .mist-wave {
+    filter: none !important;
+  }
+
+  .firefly-mote,
+  .rigen-3d-tray {
+    box-shadow: none !important;
   }
 
   .seal-orbit-svg,
-  .bell-bg-panorama {
-    animation: none !important;
+  .bell-bg-panorama,
+  .bell-mist-drift,
+  .firefly-mote,
+  .rigen-3d-tray {
+    will-change: transform;
   }
 
   .bell-bg-panorama {
@@ -2114,43 +2129,36 @@ h1, h2, h3, .serif {
   .spotlight {
     width: 340px;
     height: 240px;
-    filter: blur(16px);
+    filter: blur(14px);
   }
 
   .spotlight-core {
     width: 210px;
     height: 160px;
-    filter: blur(8px);
+    filter: blur(7px);
   }
 
   .rigen-slats-grid {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
   }
 
-  .mist-wave {
-    display: none !important;
-  }
-
-  .page-section.active-page {
-    animation: mobileFadePageIn 0.32s ease-out both;
-  }
-
+  /* Animasi 3D Origami Scroll Naik-Turun Tetap Aktif & Ringan di GPU HP */
   .origami-anim {
-    will-change: auto;
-    transition: transform 0.38s ease-out, opacity 0.35s ease-out;
+    transition: transform 0.48s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.42s ease;
   }
 
-  .origami-anim.fold-bottom,
+  .origami-anim.fold-bottom {
+    opacity: 0;
+    transform: perspective(900px) rotateX(-16deg) translate3d(0, 26px, 0) scale(0.96);
+  }
+
   .origami-anim.fold-top {
-    transform: translate3d(0, 18px, 0);
+    opacity: 0;
+    transform: perspective(900px) rotateX(16deg) translate3d(0, -24px, 0) scale(0.96);
   }
 
   .origami-anim.unfolded {
-    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    transform: perspective(900px) rotateX(0deg) translate3d(0, 0, 0) scale(1);
   }
-}
-
-@keyframes mobileFadePageIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
 }

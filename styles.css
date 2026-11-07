@@ -289,7 +289,7 @@ body.gate-locked {
   color: rgba(255, 244, 224, 0.88);
 }
 
-/* Struktur Lonceng 3D Presisi dengan Fisika Tarik ke Bawah (Pull-Down) */
+/* Struktur Lonceng 3D Presisi dengan Fisika Tarik ke Bawah (Pull-Down) & Ayunan Halus */
 .bell-wrapper {
   position: relative;
   z-index: 4;
@@ -300,13 +300,21 @@ body.gate-locked {
   margin-bottom: 24px;
   outline: none;
   transform-origin: 50% -260px;
-  transform: translateY(calc(var(--pull-y, 0px) * 0.45)) rotate(var(--bell-sway, 0deg));
+  transform: translate3d(0, calc(var(--pull-y, 0px) * 0.45), 0) rotate(var(--bell-sway, 0deg));
+  animation: gentleBellPendulum 6.5s ease-in-out infinite alternate;
   transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
   touch-action: none;
+  will-change: transform;
+}
+
+@keyframes gentleBellPendulum {
+  0% { transform: translate3d(0, calc(var(--pull-y, 0px) * 0.45), 0) rotate(calc(var(--bell-sway, 0deg) - 0.7deg)); }
+  100% { transform: translate3d(0, calc(var(--pull-y, 0px) * 0.45), 0) rotate(calc(var(--bell-sway, 0deg) + 0.7deg)); }
 }
 
 .bell-scene.is-pulling .bell-wrapper {
   cursor: grabbing;
+  animation: none;
   transition: none;
 }
 
@@ -2767,7 +2775,7 @@ h1, h2, h3, .serif {
     white-space: nowrap;
   }
 
-  /* Optimasi Performa GPU HP (Anti-Lag & 60fps Smooth Scrolling) */
+  /* Optimasi Performa GPU HP: Semua Animasi Tetap Bergerak Lancar 60fps Tanpa Beban Blur */
   .navbar,
   .hero h1,
   .section-header,
@@ -2788,23 +2796,30 @@ h1, h2, h3, .serif {
     -webkit-backdrop-filter: none !important;
   }
 
-  .tobacco-3d-garden,
-  .bell-mist-drift,
-  .bell-fireflies {
-    display: none !important;
+  .bell-mist-drift {
+    filter: none !important;
+  }
+
+  .firefly-mote,
+  .garden-pollen-mote {
+    box-shadow: none !important;
   }
 
   .bansari-ring-svg,
   .bell-bg-panorama,
-  .specimen-3d-turntable {
-    animation: none !important;
+  .bell-mist-drift,
+  .firefly-mote,
+  .specimen-3d-turntable,
+  .tobacco-3d-plant {
+    will-change: transform;
   }
 
   .bansari-emblem-wrap,
   .bell-svg,
   .bell-scene.lit .bell-svg,
   .bell-scene.lit .svg-inner-lit,
-  .tobacco-leaf-item {
+  .tobacco-leaf-item,
+  .plant-3d-leaf {
     filter: none !important;
   }
 
@@ -2820,17 +2835,12 @@ h1, h2, h3, .serif {
   .spotlight {
     width: 340px;
     height: 240px;
-    filter: blur(16px);
+    filter: blur(14px);
   }
 
   .spotlight-core {
     width: 210px;
     height: 160px;
-    filter: blur(8px);
-  }
-
-  .scroll-anim {
-    will-change: auto;
-    transition: opacity 0.35s ease-out, transform 0.38s ease-out;
+    filter: blur(7px);
   }
 }

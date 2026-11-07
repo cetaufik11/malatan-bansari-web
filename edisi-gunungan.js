@@ -264,10 +264,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initReferences();
   initBidirectionalOrigamiScroll();
   initRigenShutterMultiPage();
-  if (!IS_MOBILE_DEVICE) {
-    initFloating3DRigenStage();
-    initInteractiveDiorama3D();
-  }
+  initFloating3DRigenStage();
+  initInteractiveDiorama3D();
   initDetailPopupModal();
 
   document.getElementById("printArchiveBtn")?.addEventListener("click", () => {
@@ -441,7 +439,7 @@ function initRigenShutterMultiPage() {
   const topbarChapter = document.getElementById("topbarActiveChapter");
 
   if (slatsGrid) {
-    const slatCount = IS_MOBILE_DEVICE ? 5 : 10;
+    const slatCount = IS_MOBILE_DEVICE ? 6 : 10;
     const mid = (slatCount - 1) / 2;
     let slatsHtml = "";
     for (let i = 0; i < slatCount; i++) {
@@ -557,7 +555,7 @@ function initRigenShutterMultiPage() {
   updatePageUi(0);
 }
 
-// 3. Bidirectional 3D Origami Unfold Scroll Animation (Dioptimalkan agar 60fps di HP)
+// 3. Bidirectional 3D Origami Unfold Scroll Animation (Aktif Dua Arah & 60fps di HP maupun Desktop)
 function initBidirectionalOrigamiScroll() {
   origamiObserver = new IntersectionObserver(
     (entries) => {
@@ -566,10 +564,7 @@ function initBidirectionalOrigamiScroll() {
         if (entry.isIntersecting) {
           el.classList.add("unfolded");
           el.classList.remove("fold-bottom", "fold-top");
-          if (IS_MOBILE_DEVICE) {
-            origamiObserver.unobserve(el);
-          }
-        } else if (!IS_MOBILE_DEVICE) {
+        } else {
           el.classList.remove("unfolded");
           if (entry.boundingClientRect.top < 0) {
             el.classList.add("fold-top");
@@ -595,23 +590,24 @@ function registerOrigamiTargets() {
   targets.forEach((node, idx) => {
     if (!node.classList.contains("origami-anim")) {
       node.classList.add("origami-anim", "fold-bottom");
-      node.style.setProperty("--origami-delay", `${(idx % 5) * 65}ms`);
+      node.style.setProperty("--origami-delay", `${(idx % 5) * 55}ms`);
     }
     origamiObserver.observe(node);
   });
 }
 
-// 4. Floating 3D Bamboo Rigen Trays & Interactive 3D Diorama
+// 4. Floating 3D Bamboo Rigen Trays & Interactive 3D Diorama (Aktif & Lancar di HP maupun Desktop)
 function initFloating3DRigenStage() {
   const container = document.getElementById("floating3DObjects");
   if (!container) return;
 
-  const trays = [
+  const allTrays = [
     { x: "82%", y: "10%", w: "175px", h: "105px", z: "-30px", dur: "8.5s", delay: "0s" },
     { x: "88%", y: "66%", w: "190px", h: "115px", z: "-50px", dur: "9.8s", delay: "-2s" },
     { x: "26%", y: "78%", w: "155px", h: "95px", z: "-80px", dur: "10.5s", delay: "-4s" },
     { x: "55%", y: "8%", w: "145px", h: "88px", z: "-95px", dur: "9.2s", delay: "-1.2s" }
   ];
+  const trays = IS_MOBILE_DEVICE ? allTrays.slice(0, 2) : allTrays;
 
   container.innerHTML = trays.map((t) => `
     <div class="rigen-3d-tray"
@@ -624,27 +620,39 @@ function initInteractiveDiorama3D() {
   const box = document.getElementById("heroDioramaBox");
   if (!box) return;
 
-  box.addEventListener("mousemove", (e) => {
-    const rect = box.getBoundingClientRect();
-    const nx = (e.clientX - rect.left) / rect.width - 0.5;
-    const ny = (e.clientY - rect.top) / rect.height - 0.5;
-    box.style.setProperty("--dio-rx", `${(-ny * 16).toFixed(1)}deg`);
-    box.style.setProperty("--dio-ry", `${(nx * 20).toFixed(1)}deg`);
-    box.querySelectorAll(".diorama-floating-badge").forEach((b, idx) => {
-      const factor = (idx + 1) * 8;
-      b.style.setProperty("--badge-dx", `${(nx * factor).toFixed(1)}px`);
-      b.style.setProperty("--badge-dy", `${(ny * factor).toFixed(1)}px`);
+  let rafDio = null;
+  function updateDioramaTilt(clientX, clientY) {
+    if (rafDio) return;
+    rafDio = requestAnimationFrame(() => {
+      rafDio = null;
+      const rect = box.getBoundingClientRect();
+      const nx = (clientX - rect.left) / rect.width - 0.5;
+      const ny = (clientY - rect.top) / rect.height - 0.5;
+      box.style.setProperty("--dio-rx", `${(-ny * 14).toFixed(1)}deg`);
+      box.style.setProperty("--dio-ry", `${(nx * 18).toFixed(1)}deg`);
+      box.querySelectorAll(".diorama-floating-badge").forEach((b, idx) => {
+        const factor = (idx + 1) * 7;
+        b.style.setProperty("--badge-dx", `${(nx * factor).toFixed(1)}px`);
+        b.style.setProperty("--badge-dy", `${(ny * factor).toFixed(1)}px`);
+      });
     });
-  });
+  }
 
-  box.addEventListener("mouseleave", () => {
+  function resetDioramaTilt() {
     box.style.setProperty("--dio-rx", "0deg");
     box.style.setProperty("--dio-ry", "0deg");
     box.querySelectorAll(".diorama-floating-badge").forEach((b) => {
       b.style.setProperty("--badge-dx", "0px");
       b.style.setProperty("--badge-dy", "0px");
     });
-  });
+  }
+
+  box.addEventListener("mousemove", (e) => updateDioramaTilt(e.clientX, e.clientY), { passive: true });
+  box.addEventListener("touchmove", (e) => {
+    if (e.touches && e.touches[0]) updateDioramaTilt(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+  box.addEventListener("mouseleave", resetDioramaTilt, { passive: true });
+  box.addEventListener("touchend", resetDioramaTilt, { passive: true });
 }
 
 function showToast(msg) {
