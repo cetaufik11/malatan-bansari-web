@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Babad & Warisan Malatan — Portal Sejarah Digital Desa Bansari, Temanggung</title>
+  <meta name="description" content="Ensiklopedia sejarah digital, peta kultural interaktif, tradisi tembakau lereng Sindoro, dan studi bina damai Dusun Malatan, Desa Bansari, Kecamatan Bansari, Kabupaten Temanggung." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Lora:ital,wght@0,500;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20261107g" />
+</head>
+<body class="gate-locked">
+  <!-- SPLASH SCREEN / HALAMAN AWAL: ATMOSPHERIC TWILIGHT SINDORO & 3D BELL SPOTLIGHT -->
+  <div class="sindoro-gate" id="sindoroGate" role="dialog" aria-label="Halaman Pembuka Dusun Malatan">
+    <div class="bell-scene" id="bellScene">
+      <!-- Latar Atmosferik Berlapis: Siluet Panorama Sindoro, Gradien Senja & Kabut Lereng -->
+      <div class="bell-bg-panorama" style="background-image: url('sindoro-bg.jpg');"></div>
+      <div class="bell-ambient-aurora"></div>
+      <div class="bell-mist-drift mist-drift-1"></div>
+      <div class="bell-mist-drift mist-drift-2"></div>
+
+      <!-- Partikel Cahaya Halus (Kunang-kunang / Embun Senja Lereng Sindoro) -->
+      <div class="bell-fireflies" aria-hidden="true">
+        <span class="firefly-mote m1"></span>
+        <span class="firefly-mote m2"></span>
+        <span class="firefly-mote m3"></span>
+        <span class="firefly-mote m4"></span>
+        <span class="firefly-mote m5"></span>
+        <span class="firefly-mote m6"></span>
+      </div>
+
+      <!-- Tulisan di atas lampu dengan font standar biasa soal Dusun Malatan -->
+      <div class="bell-top-caption">
+        <span class="bell-caption-kicker">Desa Bansari · Lereng Timur Gunung Sindoro</span>
+        <p class="bell-caption-title">Dusun Malatan, Temanggung</p>
+        <p class="bell-caption-desc">Menyusuri jejak sejarah babad dusun, tradisi tembakau lereng gunung, dan harmoni kerukunan warga.</p>
+      </div>
+
+      <!-- Lonceng / Lampu Gantung 3D dengan Ayunan Halus -->
+      <div class="bell-wrapper" id="bellTrigger" role="button" tabindex="0" aria-label="Nyalakan lampu untuk masuk ke halaman utama">
+        <svg class="bell-svg" viewBox="0 0 240 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Gradien Batang Gantung Atas -->
+            <linearGradient id="stemGrad" x1="106" y1="0" x2="134" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#0d0d0d"/>
+              <stop offset="32%" stop-color="#3d3d3d"/>
+              <stop offset="65%" stop-color="#1a1a1a"/>
+              <stop offset="100%" stop-color="#080808"/>
+            </linearGradient>
+
+            <!-- Gradien Cincin Leher Lonceng -->
+            <linearGradient id="ringGrad" x1="88" y1="0" x2="152" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#111111"/>
+              <stop offset="30%" stop-color="#4e4e4e"/>
+              <stop offset="55%" stop-color="#262626"/>
+              <stop offset="100%" stop-color="#0a0a0a"/>
+            </linearGradient>
+
+            <!-- Gradien Bodi Utama Lonceng 3D Matte -->
+            <radialGradient id="bellBodyGrad" cx="36%" cy="28%" r="70%" fx="32%" fy="22%">
+              <stop offset="0%" stop-color="#545454"/>
+              <stop offset="28%" stop-color="#333333"/>
+              <stop offset="65%" stop-color="#171717"/>
+              <stop offset="92%" stop-color="#0b0b0b"/>
+              <stop offset="100%" stop-color="#222222"/>
+            </radialGradient>
+
+            <!-- Gradien Bibir Luar Lonceng -->
+            <linearGradient id="outerRimGrad" x1="26" y1="0" x2="214" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#1c1c1c"/>
+              <stop offset="22%" stop-color="#4a4a4a"/>
+              <stop offset="50%" stop-color="#242424"/>
+              <stop offset="82%" stop-color="#383838"/>
+              <stop offset="100%" stop-color="#121212"/>
+            </linearGradient>
+
+            <!-- Gradien Rongga Dalam Lonceng (Saat Mati) -->
+            <radialGradient id="innerDarkGrad" cx="50%" cy="45%" r="55%">
+              <stop offset="0%" stop-color="#050505"/>
+              <stop offset="70%" stop-color="#141414"/>
+              <stop offset="100%" stop-color="#2c2c2c"/>
+            </radialGradient>
+
+            <!-- Gradien Rongga Dalam Lonceng (Saat Menyala Terang Benderang) -->
+            <radialGradient id="innerLitGrad" cx="50%" cy="45%" r="55%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="45%" stop-color="#fff6d6"/>
+              <stop offset="78%" stop-color="#ffcf70"/>
+              <stop offset="95%" stop-color="#8a5a1e"/>
+              <stop offset="100%" stop-color="#3b250a"/>
+            </radialGradient>
+
+            <!-- Gradien Bandul / Bola Lampu (Saat Mati) -->
+            <radialGradient id="clapperDark" cx="35%" cy="32%" r="65%">
+              <stop offset="0%" stop-color="#585858"/>
+              <stop offset="45%" stop-color="#262626"/>
+              <stop offset="85%" stop-color="#0d0d0d"/>
+              <stop offset="100%" stop-color="#1f1f1f"/>
+            </radialGradient>
+
+            <!-- Gradien Bandul / Bola Lampu (Saat Menyala Terang Benderang) -->
+            <radialGradient id="clapperLit" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="60%" stop-color="#ffffff"/>
+              <stop offset="100%" stop-color="#ffe08a"/>
+            </radialGradient>
+
+            <!-- Filter Cahaya Bohlam (Sangat Terang & Bercahaya) -->
+            <filter id="bulbGlow" x="-160%" y="-160%" width="420%" height="420%">
+              <feGaussianBlur stdDeviation="8" result="blur1"/>
+              <feGaussianBlur stdDeviation="22" result="blur2"/>
+              <feGaussianBlur stdDeviation="46" result="blur3"/>
+              <feMerge>
+                <feMergeNode in="blur3"/>
+                <feMergeNode in="blur2"/>
+                <feMergeNode in="blur2"/>
+                <feMergeNode in="blur1"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Kabel / Batang Gantung Atas Panjang Menyambung Penuh ke Plafon Atas -->
+          <path d="M111 -700 H129 V46 H111 Z" fill="url(#stemGrad)"/>
+
+          <!-- Cincin Leher Lonceng 1 & 2 -->
+          <rect x="94" y="42" width="52" height="9" rx="4.5" fill="url(#ringGrad)"/>
+          <rect x="88" y="50" width="64" height="10" rx="5" fill="url(#ringGrad)"/>
+
+          <!-- Bodi Melengkung Lonceng -->
+          <path d="M90 58 
+                   C68 62, 62 88, 56 116 
+                   C50 142, 34 156, 26 165 
+                   L214 165 
+                   C206 156, 190 142, 184 116 
+                   C178 88, 172 62, 150 58 Z" 
+                fill="url(#bellBodyGrad)"/>
+
+          <!-- Garis Aksentuasi Atas Bibir Lonceng -->
+          <path d="M35 154 Q120 142 205 154" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none"/>
+          <ellipse cx="120" cy="166" rx="94" ry="20" fill="url(#outerRimGrad)"/>
+
+          <!-- Rongga Dalam Lonceng (Gelap) -->
+          <ellipse cx="120" cy="167" rx="84" ry="15.5" fill="url(#innerDarkGrad)"/>
+
+          <!-- Rongga Dalam Lonceng (Menyala - Transisi Opacity) -->
+          <ellipse class="svg-inner-lit" cx="120" cy="167" rx="84" ry="15.5" fill="url(#innerLitGrad)"/>
+
+          <!-- Bola Lampu / Bandul (Gelap) -->
+          <circle class="svg-clapper-dark" cx="120" cy="175" r="16" fill="url(#clapperDark)"/>
+
+          <!-- Bola Lampu / Bandul (Menyala) -->
+          <circle class="svg-clapper-lit" cx="120" cy="175" r="16" fill="url(#clapperLit)" filter="url(#bulbGlow)"/>
+        </svg>
+        <div class="spotlight"></div>
+        <div class="spotlight-core"></div>
+      </div>
+
+      <!-- Tombol Interaktif -->
+      <button class="glow-btn" id="holdBtn" type="button">
+        <span id="btnText">Nyalakan Lampu &amp; Masuk</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ANIMASI KUMPULAN DAUN TEMBAKAU MENUTUP LAYAR SAAT PINDAH HALAMAN -->
+  <div class="tobacco-curtain" id="tobaccoLeafCurtain" aria-hidden="true">
+    <div class="tobacco-leaves-layer" id="tobaccoLeavesLayer"></div>
+    <div class="tobacco-curtain-badge" id="tobaccoCurtainBadge">
+      <span class="tobacco-badge-kicker">🌿 WARISAN EMAS HIJAU LERENG SINDORO</span>
+      <strong class="tobacco-badge-title" id="tobaccoCurtainTitle">Membuka Halaman...</strong>
+    </div>
+  </div>
+
+  <!-- LATAR BELAKANG TETAP (FIXED WATERMARK) LOGO KECAMATAN BANSARI / KAB. TEMANGGUNG -->
+  <div class="bansari-bg-watermark" id="bansariBgWatermark" aria-hidden="true">
+    <div class="bansari-emblem-wrap">
+      <svg class="bansari-ring-svg" viewBox="0 0 360 360">
+        <defs>
+          <path id="circleTextPathTop" d="M 180, 180 m -148, 0 a 148,148 0 1,1 296,0 a 148,148 0 1,1 -296,0" />
+        </defs>
+        <circle cx="180" cy="180" r="168" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.45" />
+        <circle cx="180" cy="180" r="132" fill="none" stroke="currentColor" stroke-width="1" opacity="0.35" />
+        <text fill="currentColor" font-size="11.5" font-weight="700" letter-spacing="3.4">
+          <textPath href="#circleTextPathTop" startOffset="4%">
+            ★ PEMERINTAH KABUPATEN TEMANGGUNG · KECAMATAN BANSARI · DESA BANSARI ★
+          </textPath>
+        </text>
+      </svg>
+      <img src="logo-bansari-temanggung.png" alt="Logo Kecamatan Bansari Kabupaten Temanggung" class="bansari-bg-logo" />
+    </div>
+  </div>
+
+  <!-- PANGGUNG ANIMASI TANAMAN TEMBAKAU 3D (KHUSUS TEMA TERANG / LIGHT MODE UI) -->
+  <div class="tobacco-3d-stage" id="tobacco3DStage" aria-hidden="true">
+    <!-- Morning Sunbeams from Gunung Sindoro East Slope -->
+    <div class="sunbeam-rays"></div>
+    <div class="sun-orb"></div>
+
+    <!-- Terraced Sindoro Plantation Horizon SVG -->
+    <svg class="plantation-hills-svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="hillLight1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#86efac" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#15803d" stop-opacity="0.18" />
+        </linearGradient>
+        <linearGradient id="hillLight2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#bbf7d0" stop-opacity="0.42" />
+          <stop offset="100%" stop-color="#ca8a04" stop-opacity="0.16" />
+        </linearGradient>
+      </defs>
+      <path fill="url(#hillLight1)" d="M0,192L120,176C240,160,480,128,720,138.7C960,149,1200,203,1320,229.3L1440,256L1440,320L0,320Z"></path>
+      <path fill="url(#hillLight2)" d="M0,240L144,218.7C288,197,576,155,864,165.3C1152,176,1344,240,1440,264L1440,320L0,320Z"></path>
+    </svg>
+
+    <!-- 3D Botanical Tobacco Plants Container (Populated dynamically by app.js) -->
+    <div class="tobacco-3d-garden" id="tobacco3DGarden"></div>
+  </div>
+
+  <!-- Top Reading Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Navigation Header -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="#beranda" class="brand">
+        <span class="brand-crest">
+          <img src="logo-bansari-temanggung.png" alt="Logo Kecamatan Bansari" class="brand-logo-img" />
+        </span>
+        <div>
+          <span class="brand-subtitle">KECAMATAN BANSARI · KAB. TEMANGGUNG</span>
+          <strong class="brand-title">Malatan · Desa Bansari</strong>
+        </div>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#beranda">Beranda</a>
+        <a href="#linimasa">Lini Masa</a>
+        <a href="#peta-kultural">Peta Spasial</a>
+        <a href="#ensiklopedia">Budaya & Tembakau</a>
+        <a href="#bina-damai">Harmoni Sosial</a>
+        <a href="#eksplorasi-ai">Tanya Sejarah & Kuis</a>
+        <a href="#referensi">Referensi Ilmiah</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn-icon theme-pill-btn" id="themeToggle" title="Ubah Tema Gelap / Tema Terang Tanaman Tembakau 3D" aria-label="Ubah Tema">
+          <span id="themeIcon">🌿</span>
+          <span class="theme-btn-label" id="themeLabel">Tema Terang 3D</span>
+        </button>
+        <button class="btn-outline btn-sm" id="printArchiveBtn" title="Cetak / Simpan PDF Ringkasan Sejarah">
+          📄 Unduh Ringkasan
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="beranda">
+    <div class="hero-backdrop"></div>
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="badge-row">
+          <span class="pill pill-gold">📍 Kec. Bansari, Kab. Temanggung</span>
+          <span class="pill pill-emerald">⛰️ Lereng Timur Gunung Sindoro (1.250 mdpl)</span>
+        </div>
+        <h1>
+          Menelusuri Jejak Sejarah, Tradisi Agraris &amp; <em>Harmoni Dusun Malatan</em> Desa Bansari
+        </h1>
+        <p class="hero-lead">
+          Portal dokumentasi sejarah lokal, kearifan budaya perajang <strong>Tembakau Lembutan</strong>, warisan manuskrip ulama, hingga laboratorium hidup <strong>kerukunan lintas iman (Bina Damai)</strong> masyarakat Dusun Malatan di kaki Gunung Sindoro.
+        </p>
+
+        <div class="hero-cta">
+          <a href="#linimasa" class="btn-primary">Jelajahi Lini Masa Sejarah →</a>
+          <a href="#peta-kultural" class="btn-secondary">🗺️ Buka Peta Kultural Interaktif</a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <strong>2001</strong>
+            <span>Tahun Pemekaran Kec. Bansari (Ibu Kota di Desa Bansari)</span>
+          </div>
+          <div class="stat-item">
+            <strong>1.000–1.500m</strong>
+            <span>Elevasi Lanskap Vulkanik Lereng Timur Sindoro</span>
+          </div>
+          <div class="stat-item">
+            <strong>13 Desa / 43 Dusun</strong>
+            <span>Pusat Pemerintahan Berada di Dusun Malatan</span>
+          </div>
+          <div class="stat-item">
+            <strong>100% Harmoni</strong>
+            <span>Model Sosiologis Bina Damai Lintas Agama</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Mountain & Geography Card -->
+      <aside class="hero-card">
+        <div class="card-header-tag">PROFIL GEOGRAFIS &amp; HISTORIS</div>
+        <h3>Lanskap Kultural Malatan – Bansari</h3>
+
+        <!-- Interactive 3D Tobacco Plant Showcase (Highlighted in Light Theme) -->
+        <div class="hero-tobacco-3d-showcase" id="heroTobacco3DBox" title="Geser kursor untuk memutar Tanaman Tembakau 3D">
+          <div class="specimen-3d-badge">🌱 SPESIMEN 3D · TEMBAKAU LEMBUTAN SINDORO</div>
+          <div class="specimen-3d-viewport" id="specimen3DViewport">
+            <!-- Populated with 3D CSS/SVG Tobacco Plant by app.js -->
+          </div>
+          <div class="specimen-3d-caption">Gerakkan mouse untuk memutar tanaman tembakau 3D (360°)</div>
+        </div>
+
+        <div class="topo-illustration">
+          <svg viewBox="0 0 420 200" class="sindoro-svg" aria-label="Ilustrasi Topografi Lereng Gunung Sindoro dan Dusun Malatan">
+            <defs>
+              <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1e3a2f" />
+                <stop offset="100%" stop-color="#0f1715" />
+              </linearGradient>
+              <linearGradient id="mountGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.45" />
+                <stop offset="100%" stop-color="#064e3b" stop-opacity="0.85" />
+              </linearGradient>
+            </defs>
+            <rect width="420" height="200" rx="12" fill="url(#skyGrad)" />
+            <circle cx="340" cy="48" r="22" fill="#f59e0b" opacity="0.75" />
+            <!-- Gunung Sindoro Silhouette -->
+            <polygon points="10,190 145,35 285,190" fill="url(#mountGrad)" stroke="#34d399" stroke-width="1.5" />
+            <!-- Gunung Sumbing Distant Silhouette -->
+            <polygon points="210,190 315,65 415,190" fill="#065f46" opacity="0.55" stroke="#10b981" stroke-width="1" />
+            <!-- Elevation Contour Lines -->
+            <path d="M 40 165 Q 160 135 390 170" fill="none" stroke="#f59e0b" stroke-dasharray="4 4" stroke-width="1.2" />
+            <!-- Marker: Embung Bansari -->
+            <circle cx="175" cy="105" r="5" fill="#38bdf8" />
+            <text x="185" y="108" fill="#bae6fd" font-size="10" font-weight="600">Embung Bansari (1.400m)</text>
+            <!-- Marker: Dusun Malatan -->
+            <circle cx="215" cy="145" r="6" fill="#f59e0b" stroke="#fff" stroke-width="2" />
+            <text x="226" y="148" fill="#fef08a" font-size="11" font-weight="700">Dusun Malatan (Pusat Bansari)</text>
+          </svg>
+        </div>
+
+        <ul class="geo-list">
+          <li>
+            <span>Koordinat Kultural:</span>
+            <strong>Lereng Timur Gn. Sindoro, Kab. Temanggung</strong>
+          </li>
+          <li>
+            <span>Peran Administratif:</span>
+            <strong>Lokasi Kantor Kecamatan &amp; Pusat Desa Bansari</strong>
+          </li>
+          <li>
+            <span>Komoditas Warisan:</span>
+            <strong>Tembakau Lembutan &amp; Srintil, Kopi Arabika, Hortikultura</strong>
+          </li>
+          <li>
+            <span>Tradisi Utama:</span>
+            <strong>Merti Dusun (Nyadran), Wiwitan, Jamasan Gobang, Gelar Budaya</strong>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- SECTION 1: INTERACTIVE HISTORICAL TIMELINE -->
+  <section class="section" id="linimasa">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">01 · PERIODISASI SEJARAH LOKAL</span>
+          <h2>Lini Masa Sejarah Dusun Malatan &amp; Desa Bansari</h2>
+          <p>Telusuri perkembangan historis wilayah lereng Gunung Sindoro dari masa peradaban agraris kuno, masuknya budidaya tembakau, warisan manuskrip ulama, hingga pemekaran administratif dan studi bina damai modern.</p>
+        </div>
+        <div class="timeline-filters" id="timelineFilters">
+          <button class="filter-btn active" data-era="all">Semua Era</button>
+          <button class="filter-btn" data-era="kuno">Akar Kuno &amp; Babad Alas</button>
+          <button class="filter-btn" data-era="agraris">Era Tembakau &amp; Kolonial</button>
+          <button class="filter-btn" data-era="intelektual">Ulama &amp; Lintas Iman</button>
+          <button class="filter-btn" data-era="modern">Pemekaran 2001 – Kini</button>
+        </div>
+      </div>
+
+      <div class="timeline-wrapper" id="timelineContainer">
+        <!-- Populated dynamically by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: INTERACTIVE CULTURAL & SPATIAL TOPOGRAPHIC CONTOUR MAP -->
+  <section class="section section-alt" id="peta-kultural">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">02 · KARTOGRAFI TOPOGRAFI &amp; PEMETAAN SPASIAL (SKALA 1:12.500)</span>
+          <h2>Peta Kontur Topografi Interaktif Dusun Malatan &amp; Lereng Sindoro</h2>
+          <p>Visualisasi garis kontur ketinggian (<em>isohypses</em>) lereng timur Gunung Sindoro (980 – 2.100 mdpl). Geser kursor pada peta untuk membaca elevasi kontur secara <em>real-time</em>, dan klik titik lokus untuk membedah data historisnya.</p>
+        </div>
+
+        <div class="topo-toolbar">
+          <label class="topo-toggle"><input type="checkbox" id="toggleContours" checked /> Garis Kontur &amp; Elevasi</label>
+          <label class="topo-toggle"><input type="checkbox" id="toggleHydro" checked /> Aliran Mata Air &amp; Lembah</label>
+          <label class="topo-toggle"><input type="checkbox" id="toggleGrid" checked /> Grid Koordinat Geografis</label>
+          <div class="topo-telemetry" id="topoTelemetry">
+            <span>🧭 Kursor: <strong>07°18'12" LS · 110°01'44" BT</strong></span>
+            <span>⛰️ Elevasi: <strong id="cursorElev">1.250 mdpl</strong></span>
+            <span>📐 Lereng: <strong id="cursorSlope">14% (Landai–Sedang)</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-explorer-grid">
+        <div class="map-canvas-box">
+          <svg viewBox="0 0 760 500" class="cultural-map-svg" id="culturalMapSvg" aria-label="Peta Kontur Topografi Dusun Malatan Desa Bansari">
+            <defs>
+              <!-- Hypsometric Elevation Tint Gradient -->
+              <radialGradient id="hypsoBase" cx="12%" cy="14%" r="92%">
+                <stop offset="0%" stop-color="#365314" stop-opacity="0.65" />
+                <stop offset="22%" stop-color="#14532d" stop-opacity="0.58" />
+                <stop offset="50%" stop-color="#064e3b" stop-opacity="0.52" />
+                <stop offset="78%" stop-color="#0f2922" stop-opacity="0.88" />
+                <stop offset="100%" stop-color="#091310" stop-opacity="0.98" />
+              </radialGradient>
+
+              <pattern id="topoGridPattern" width="76" height="50" patternUnits="userSpaceOnUse">
+                <path d="M 76 0 L 0 0 0 50" fill="none" stroke="#34d399" stroke-opacity="0.09" stroke-width="0.8" />
+              </pattern>
+            </defs>
+
+            <!-- Base Hypsometric Background -->
+            <rect width="760" height="500" rx="14" fill="url(#hypsoBase)" />
+
+            <!-- LAYER 1: UTM / Geographic Coordinate Grid -->
+            <g id="layerGrid">
+              <rect width="760" height="500" fill="url(#topoGridPattern)" />
+              <text x="8" y="14" class="grid-coord">110°00'30" BT</text>
+              <text x="235" y="14" class="grid-coord">110°01'15" BT</text>
+              <text x="465" y="14" class="grid-coord">110°02'00" BT</text>
+              <text x="675" y="14" class="grid-coord">110°02'45" BT</text>
+              <text x="8" y="110" class="grid-coord">07°17'30" LS</text>
+              <text x="8" y="260" class="grid-coord">07°18'15" LS</text>
+              <text x="8" y="410" class="grid-coord">07°19'00" LS</text>
+            </g>
+
+            <!-- LAYER 2: TOPOGRAPHIC CONTOUR LINES (ISOHYPSES) -->
+            <g id="layerContours">
+              <!-- Hypsometric Elevation Fill Bands -->
+              <path d="M 0,0 L 210,0 C 195,58 160,92 135,125 C 102,168 62,195 0,220 Z" fill="#65a30d" fill-opacity="0.14" />
+              <path d="M 0,0 L 310,0 C 285,82 250,130 205,175 C 155,225 88,268 0,305 Z" fill="#16a34a" fill-opacity="0.10" />
+              <path d="M 0,0 L 435,0 C 405,110 355,185 292,245 C 220,312 125,365 0,405 Z" fill="#10b981" fill-opacity="0.07" />
+
+              <!-- INDEX CONTOUR 2000m (Thick) -->
+              <path class="contour-index" d="M 0,135 C 38,125 65,105 88,82 C 110,58 128,32 142,0" />
+              <!-- Intermediate 1900m -->
+              <path class="contour-sub" d="M 0,168 C 48,154 82,128 112,98 C 138,72 158,38 175,0" />
+              <!-- Intermediate 1850m -->
+              <path class="contour-sub" d="M 0,195 C 58,178 96,150 132,115 C 162,84 185,44 205,0" />
+
+              <!-- INDEX CONTOUR 1800m (Thick) -->
+              <path class="contour-index" d="M 0,222 C 65,202 108,172 148,132 C 175,105 198,68 235,0" />
+              <!-- Intermediate 1700m (with river valley V-indentation) -->
+              <path class="contour-sub" d="M 0,252 C 74,230 118,195 145,162 C 156,148 178,152 192,135 C 218,104 242,58 272,0" />
+              <!-- Intermediate 1650m -->
+              <path class="contour-sub" d="M 0,280 C 86,255 135,216 168,180 C 182,164 205,168 220,148 C 248,112 275,62 308,0" />
+
+              <!-- INDEX CONTOUR 1600m (Thick) -->
+              <path class="contour-index" d="M 0,308 C 98,282 152,242 190,202 C 206,184 232,188 248,166 C 280,124 312,68 345,0" />
+              <!-- Intermediate 1550m -->
+              <path class="contour-sub" d="M 0,336 C 112,308 170,266 214,222 C 232,204 260,208 278,184 C 314,136 348,74 385,0" />
+              <!-- Intermediate 1500m -->
+              <path class="contour-sub" d="M 0,365 C 125,335 190,290 238,242 C 258,222 288,226 308,202 C 348,150 385,82 425,0" />
+              <!-- Intermediate 1450m -->
+              <path class="contour-sub" d="M 0,394 C 142,362 212,315 264,264 C 286,242 318,245 340,218 C 382,164 422,90 468,0" />
+
+              <!-- INDEX CONTOUR 1400m (Thick - Embung Bansari Zone) -->
+              <path class="contour-index" d="M 0,425 C 158,390 235,342 290,286 C 315,262 348,264 372,235 C 418,178 462,98 512,0" />
+              <!-- Intermediate 1350m -->
+              <path class="contour-sub" d="M 0,455 C 175,418 258,368 318,308 C 345,282 380,284 406,252 C 455,192 502,108 556,0" />
+              <!-- Intermediate 1300m -->
+              <path class="contour-sub" d="M 0,485 C 192,448 282,395 346,332 C 375,302 412,304 440,270 C 492,206 544,118 602,0" />
+
+              <!-- INDEX CONTOUR 1250m (Thick - Core Dusun Malatan Zone) -->
+              <path class="contour-index" d="M 35,500 C 215,462 312,412 378,352 C 408,322 448,324 476,288 C 532,220 588,128 650,0" />
+              <!-- Intermediate 1200m -->
+              <path class="contour-sub" d="M 105,500 C 262,468 352,422 414,368 C 445,340 485,342 515,306 C 572,236 632,140 698,0" />
+              <!-- Intermediate 1150m -->
+              <path class="contour-sub" d="M 185,500 C 318,472 402,430 458,382 C 490,356 528,358 558,322 C 615,252 678,154 748,0" />
+
+              <!-- INDEX CONTOUR 1100m (Thick - Lower Bansari / Tambahrejo Zone) -->
+              <path class="contour-index" d="M 275,500 C 385,476 458,438 508,395 C 538,370 575,372 605,338 C 658,272 715,180 760,82" />
+              <!-- Intermediate 1050m -->
+              <path class="contour-sub" d="M 375,500 C 462,480 522,446 565,408 C 595,384 628,385 656,354 C 702,298 738,232 760,175" />
+              <!-- INDEX CONTOUR 1000m -->
+              <path class="contour-index" d="M 485,500 C 552,482 602,452 642,418 C 675,392 718,365 760,285" />
+
+              <!-- Contour Elevation Labels (Inline Cartographic Badges) -->
+              <g class="contour-label-group" transform="translate(68, 92) rotate(-38)">
+                <rect x="-24" y="-8" width="48" height="15" rx="3" class="contour-tag-bg" />
+                <text x="0" y="3" text-anchor="middle" class="contour-tag-text">2.000 m</text>
+              </g>
+              <g class="contour-label-group" transform="translate(122, 148) rotate(-38)">
+                <rect x="-24" y="-8" width="48" height="15" rx="3" class="contour-tag-bg" />
+                <text x="0" y="3" text-anchor="middle" class="contour-tag-text">1.800 m</text>
+              </g>
+              <g class="contour-label-group" transform="translate(178, 206) rotate(-38)">
+                <rect x="-24" y="-8" width="48" height="15" rx="3" class="contour-tag-bg" />
+                <text x="0" y="3" text-anchor="middle" class="contour-tag-text">1.600 m</text>
+              </g>
+              <g class="contour-label-group" transform="translate(262, 298) rotate(-36)">
+                <rect x="-24" y="-8" width="48" height="15" rx="3" class="contour-tag-bg" />
+                <text x="0" y="3" text-anchor="middle" class="contour-tag-text">1.400 m</text>
+              </g>
+              <g class="contour-label-group" transform="translate(345, 366) rotate(-34)">
+                <rect x="-24" y="-8" width="48" height="15" rx="3" class="contour-tag-bg" />
+                <text x="0" y="3" text-anchor="middle" class="contour-tag-text">1.250 m</text>
+              </g>
+              <g class="contour-label-group" transform="translate(475, 412) rotate(-32)">
+                <rect x="-24" y="-8" width="48" height="15" rx="3" class="contour-tag-bg" />
+                <text x="0" y="3" text-anchor="middle" class="contour-tag-text">1.100 m</text>
+              </g>
+              <g class="contour-label-group" transform="translate(625, 428) rotate(-30)">
+                <rect x="-24" y="-8" width="48" height="15" rx="3" class="contour-tag-bg" />
+                <text x="0" y="3" text-anchor="middle" class="contour-tag-text">1.000 m</text>
+              </g>
+            </g>
+
+            <!-- LAYER 3: HYDROLOGY (MOUNTAIN STREAMS) & MAIN VILLAGE CORRIDOR -->
+            <g id="layerHydro">
+              <!-- Aliran Kali / Mata Air Lereng Sindoro cutting through contour V-notches -->
+              <path d="M 92,48 Q 168,145 232,188 T 395,282 T 615,375 T 760,435" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-opacity="0.65" />
+              <path d="M 195,25 Q 260,115 335,165 T 505,245 T 730,315" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="6 3" stroke-opacity="0.5" />
+              <text x="530" y="335" fill="#7dd3fc" font-size="10" font-style="italic" transform="rotate(24, 530, 335)">Aliran Irigasi Mata Air Sindoro →</text>
+
+              <!-- Jalan Utama Poros Desa Bansari - Dusun Malatan - Parakan -->
+              <path d="M 160,145 Q 275,215 385,275 T 695,435" fill="none" stroke="#f59e0b" stroke-opacity="0.7" stroke-width="3.2" stroke-dasharray="8 5" />
+              <path d="M 285,365 Q 385,275 510,185" fill="none" stroke="#fcd34d" stroke-opacity="0.45" stroke-width="2" stroke-dasharray="4 4" />
+            </g>
+
+            <!-- Peak & Compass Rose Overlay -->
+            <g transform="translate(24, 34)">
+              <polygon points="0,-12 9,8 -9,8" fill="#f59e0b" stroke="#fff" stroke-width="1.2" />
+              <text x="16" y="-1" fill="#fef08a" font-size="11.5" font-weight="700">PUNCAK GN. SINDORO (3.153 mdpl)</text>
+              <text x="16" y="13" fill="#bbf7d0" font-size="10">Hulu Vulkanik &amp; Tangkapan Air Desa Bansari</text>
+            </g>
+
+            <!-- Cartographic Compass Rose & Scale Bar (Top Right) -->
+            <g transform="translate(705, 52)">
+              <circle r="24" fill="#0b1311" fill-opacity="0.8" stroke="#34d399" stroke-width="1.2" />
+              <polygon points="0,-19 5,0 0,-4 -5,0" fill="#f59e0b" />
+              <polygon points="0,19 5,0 0,4 -5,0" fill="#64748b" />
+              <text x="0" y="-22" text-anchor="middle" fill="#f59e0b" font-size="10" font-weight="700">U</text>
+            </g>
+
+            <!-- Cartographic Legend & Scale Box (Bottom Left) -->
+            <g transform="translate(14, 412)">
+              <rect width="248" height="74" rx="8" fill="#091310" fill-opacity="0.88" stroke="#10b981" stroke-opacity="0.4" />
+              <text x="12" y="18" fill="#fcd34d" font-size="10" font-weight="700" letter-spacing="0.8">LEGENDA PETA KONTUR TOPOGRAFI</text>
+              <line x1="12" y1="30" x2="42" y2="30" stroke="#34d399" stroke-width="2.2" />
+              <text x="50" y="33" fill="#e2e8f0" font-size="10">Kontur Indeks (Interval 200 m)</text>
+              <line x1="12" y1="45" x2="42" y2="45" stroke="#10b981" stroke-width="1" stroke-dasharray="3 2" />
+              <text x="50" y="48" fill="#cbd5e1" font-size="10">Kontur Antara (Interval 50 m)</text>
+              <!-- Scale Bar -->
+              <line x1="12" y1="62" x2="92" y2="62" stroke="#f59e0b" stroke-width="2" />
+              <line x1="12" y1="58" x2="12" y2="66" stroke="#f59e0b" stroke-width="2" />
+              <line x1="52" y1="59" x2="52" y2="65" stroke="#f59e0b" stroke-width="1.5" />
+              <line x1="92" y1="58" x2="92" y2="66" stroke="#f59e0b" stroke-width="2" />
+              <text x="100" y="65" fill="#fef08a" font-size="9.5" font-weight="600">0 — 250 — 500 m</text>
+            </g>
+
+            <!-- Interactive Map Pins on Specific Contour Elevations -->
+            <g class="map-pin" data-spot="embung-bansari" data-elev="1.400 mdpl" transform="translate(215, 148)">
+              <circle r="19" class="pin-pulse" />
+              <circle r="10" class="pin-core" />
+              <text x="0" y="3.5" text-anchor="middle" class="pin-num">6</text>
+              <text x="16" y="-4" class="pin-label">Embung Bansari</text>
+              <text x="16" y="9" class="pin-sublabel">Elevasi ~1.400 mdpl</text>
+            </g>
+
+            <g class="map-pin" data-spot="gelar-budaya" data-elev="1.310 mdpl" transform="translate(292, 232)">
+              <circle r="19" class="pin-pulse" />
+              <circle r="10" class="pin-core" />
+              <text x="0" y="3.5" text-anchor="middle" class="pin-num">4</text>
+              <text x="16" y="-4" class="pin-label">Arena Merti Dusun &amp; Budaya</text>
+              <text x="16" y="9" class="pin-sublabel">Elevasi ~1.310 mdpl</text>
+            </g>
+
+            <g class="map-pin active" data-spot="malatan-pusat" data-elev="1.250 mdpl" transform="translate(388, 276)">
+              <circle r="19" class="pin-pulse" />
+              <circle r="10" class="pin-core" />
+              <text x="0" y="3.5" text-anchor="middle" class="pin-num">1</text>
+              <text x="16" y="-4" class="pin-label">Pusat Dusun Malatan &amp; Kec. Bansari</text>
+              <text x="16" y="9" class="pin-sublabel">Kontur Indeks 1.250 mdpl</text>
+            </g>
+
+            <g class="map-pin" data-spot="harmoni-ibadah" data-elev="1.235 mdpl" transform="translate(335, 345)">
+              <circle r="19" class="pin-pulse" />
+              <circle r="10" class="pin-core" />
+              <text x="0" y="3.5" text-anchor="middle" class="pin-num">2</text>
+              <text x="16" y="-4" class="pin-label">Masjid &amp; Gereja (Bina Damai)</text>
+              <text x="16" y="9" class="pin-sublabel">Elevasi ~1.235 mdpl</text>
+            </g>
+
+            <g class="map-pin" data-spot="sentra-tembakau" data-elev="1.210 mdpl" transform="translate(495, 312)">
+              <circle r="19" class="pin-pulse" />
+              <circle r="10" class="pin-core" />
+              <text x="0" y="3.5" text-anchor="middle" class="pin-num">3</text>
+              <text x="16" y="-4" class="pin-label">Sentra Rigen Tembakau Lembutan</text>
+              <text x="16" y="9" class="pin-sublabel">Elevasi ~1.210 mdpl</text>
+            </g>
+
+            <g class="map-pin" data-spot="manuskrip-tambahrejo" data-elev="1.150 mdpl" transform="translate(505, 185)">
+              <circle r="19" class="pin-pulse" />
+              <circle r="10" class="pin-core" />
+              <text x="0" y="3.5" text-anchor="middle" class="pin-num">5</text>
+              <text x="16" y="-4" class="pin-label">Jejak Manuskrip Kyai Mohaedi</text>
+              <text x="16" y="9" class="pin-sublabel">Tambahrejo · ~1.150 mdpl</text>
+            </g>
+          </svg>
+
+          <!-- Cross-Section Topographic Elevation Profile (Penampang Melintang Barat–Timur) -->
+          <div class="elevation-profile-box">
+            <div class="profile-header">
+              <strong>📈 PENAMPANG MELINTANG TOPOGRAFI (BARAT LAUT → TENGGARA)</strong>
+              <span id="activeProfileSpot">Lokus Aktif: Pusat Dusun Malatan (1.250 mdpl)</span>
+            </div>
+            <svg viewBox="0 0 720 95" class="profile-svg">
+              <defs>
+                <linearGradient id="profileFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#10b981" stop-opacity="0.45" />
+                  <stop offset="100%" stop-color="#064e3b" stop-opacity="0.05" />
+                </linearGradient>
+              </defs>
+              <!-- Grid lines -->
+              <line x1="40" y1="18" x2="700" y2="18" stroke="#334155" stroke-dasharray="3 3" stroke-width="0.8" />
+              <line x1="40" y1="45" x2="700" y2="45" stroke="#334155" stroke-dasharray="3 3" stroke-width="0.8" />
+              <line x1="40" y1="72" x2="700" y2="72" stroke="#334155" stroke-dasharray="3 3" stroke-width="0.8" />
+              <text x="4" y="21" fill="#94a3b8" font-size="9">1.600m</text>
+              <text x="4" y="48" fill="#94a3b8" font-size="9">1.300m</text>
+              <text x="4" y="75" fill="#94a3b8" font-size="9">1.000m</text>
+
+              <!-- Slope Profile Curve -->
+              <path d="M 40,8 Q 155,22 215,32 T 390,52 T 535,64 T 700,78 L 700,86 L 40,86 Z" fill="url(#profileFill)" />
+              <path d="M 40,8 Q 155,22 215,32 T 390,52 T 535,64 T 700,78" fill="none" stroke="#34d399" stroke-width="2.2" />
+
+              <!-- Profile Markers -->
+              <circle cx="195" cy="29" r="4" fill="#38bdf8" />
+              <text x="195" y="21" text-anchor="middle" fill="#bae6fd" font-size="8.5">Embung (1.400m)</text>
+
+              <circle cx="390" cy="52" r="5.5" fill="#f59e0b" stroke="#fff" stroke-width="1.5" />
+              <text x="390" y="42" text-anchor="middle" fill="#fef08a" font-size="9.5" font-weight="700">Dusun Malatan (1.250m)</text>
+
+              <circle cx="545" cy="65" r="4" fill="#10b981" />
+              <text x="545" y="56" text-anchor="middle" fill="#a7f3d0" font-size="8.5">Tambahrejo (1.150m)</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="map-detail-panel" id="mapDetailPanel">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: ENCYCLOPEDIA OF TRADITIONS & TOBACCO HERITAGE -->
+  <section class="section" id="ensiklopedia">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">03 · ENSIKLOPEDIA BUDAYA &amp; EKONOMI AGRARIS</span>
+          <h2>Khasanah Tradisi Malatan &amp; Warisan Tembakau Bansari</h2>
+          <p>Cari dan pelajari artefak budaya, ritual pertanian tembakau lereng Sindoro, kesenian rakyat, hingga naskah kuno di Desa Bansari.</p>
+        </div>
+
+        <div class="search-filter-bar">
+          <input type="search" id="archiveSearch" placeholder="🔍 Cari tradisi, istilah (mis. wiwitan, gobang, nyadran, manuskrip)..." />
+          <select id="archiveCategory">
+            <option value="all">Semua Kategori</option>
+            <option value="Ritual Adat">Ritual Adat</option>
+            <option value="Warisan Tembakau">Warisan Tembakau</option>
+            <option value="Seni Pertunjukan">Seni Pertunjukan</option>
+            <option value="Naskah & Tokoh">Naskah &amp; Tokoh</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="archive-grid" id="archiveGrid">
+        <!-- Populated dynamically by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: SOCIOLOGY OF PEACE & INTERFAITH HARMONY IN MALATAN -->
+  <section class="section section-alt" id="bina-damai">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">04 · KAJIAN SOSIOLOGIS &amp; ANTROPOLOGIS</span>
+          <h2>Dusun Malatan sebagai Laboratorium Hidup <em>Bina Damai</em></h2>
+          <p>Berdasarkan penelitian akademik (termasuk kajian repositori UIN Sunan Kalijaga Yogyakarta), Dusun Malatan di Desa Bansari dikenal luas sebagai model kerukunan antarumat beragama di pedesaan Jawa.</p>
+        </div>
+      </div>
+
+      <div class="peace-grid">
+        <article class="peace-card">
+          <div class="peace-icon">🤝</div>
+          <h3>Kekerabatan Lintas Iman dalam Satu Keluarga</h3>
+          <p>Di Dusun Malatan, perbedaan keyakinan (Islam dan Kristen/Katolik) tidak menjadi sekat sosial. Banyak keluarga besar yang anggotanya memeluk agama berbeda namun tetap tinggal dalam satu ikatan kekerabatan yang erat, saling mengunjungi saat Idulfitri maupun Natal.</p>
+          <span class="theory-tag">Konsep: Kohesi Sosial Organik &amp; Ikatan Kekerabatan Jawa</span>
+        </article>
+
+        <article class="peace-card">
+          <div class="peace-icon">⚖️</div>
+          <h3>Fungsionalisme Struktural (Talcott Parsons — AGIL)</h3>
+          <p>Dalam kajian sosiologi agama terhadap Dusun Malatan, harmoni warga terjaga melalui empat prasyarat fungsional: <strong>Adaptation</strong> (adaptasi ekonomi pertanian bersama), <strong>Goal Attainment</strong> (tujuan kesejahteraan dusun), <strong>Integration</strong> (forum warga &amp; tradisi adat), dan <strong>Latency</strong> (pemeliharaan nilai tepa slira).</p>
+          <span class="theory-tag">Rujukan: Studi Sosiologi Agama UIN Sunan Kalijaga</span>
+        </article>
+
+        <article class="peace-card">
+          <div class="peace-icon">🕊️</div>
+          <h3>Bina Damai (Peace Building — Johan Galtung)</h3>
+          <p>Tokoh agama (ulama/takmir masjid dan pendeta/majelis gereja) bersama perangkat Dusun Malatan secara aktif menjalankan mekanisme <em>peacekeeping</em> dan <em>peacebuilding</em> kultural melalui kerja bakti lintas iman, pembangunan rumah ibadah secara gotong royong, dan kenduri bersama.</p>
+          <span class="theory-tag">Konsep: Perdamaian Positif (Positive Peace)</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: AI HISTORIAN EXPLORER, QUIZ & ORAL HISTORY SUBMISSION -->
+  <section class="section" id="eksplorasi-ai">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">05 · FITUR INTERAKTIF &amp; EDUKASI SEJARAH</span>
+          <h2>Asisten Sejarawan Digital, Kuis &amp; Kontribusi Sejarah Lisan</h2>
+          <p>Gunakan fitur tanya-jawab pintar, uji wawasan kesejarahan lokal Anda, atau tambahkan dokumentasi sejarah lisan (folklore) dari sesepuh Dusun Malatan.</p>
+        </div>
+      </div>
+
+      <div class="interactive-tabs">
+        <button class="tab-btn active" data-tab="tab-assistant">🤖 Tanya Jawab Sejarah Malatan</button>
+        <button class="tab-btn" data-tab="tab-quiz">🎯 Kuis Kesadaran Sejarah Lokal</button>
+        <button class="tab-btn" data-tab="tab-oral">🎙️ Tambah Arsip Sejarah Lisan (Sesepuh)</button>
+      </div>
+
+      <!-- TAB 1: SMART HISTORIAN QA -->
+      <div class="tab-panel active" id="tab-assistant">
+        <div class="qa-layout">
+          <div class="qa-sidebar">
+            <h4>Pertanyaan Populer (Klik Cepat):</h4>
+            <div class="quick-questions" id="quickQuestions">
+              <button class="q-chip" data-q="Bagaimana sejarah terbentuknya Kecamatan Bansari dan peran Dusun Malatan?">Bagaimana sejarah pembentukan Kec. Bansari &amp; peran Malatan?</button>
+              <button class="q-chip" data-q="Mengapa Dusun Malatan dijadikan objek penelitian kerukunan umat beragama oleh UIN Sunan Kalijaga?">Mengapa Malatan menjadi model kerukunan beragama?</button>
+              <button class="q-chip" data-q="Apa itu tradisi Wiwitan, Jamasan Gobang, dan Tembakau Lembutan di Bansari?">Apa tradisi Wiwitan, Jamasan Gobang &amp; Tembakau Lembutan?</button>
+              <button class="q-chip" data-q="Siapa Kyai Mohaedi Anwar dan apa peninggalan manuskrip kuno di Desa Bansari?">Siapa Kyai Mohaedi Anwar &amp; manuskrip kuno Desa Bansari?</button>
+              <button class="q-chip" data-q="Bagaimana pelaksanaan Merti Dusun dan Gelar Budaya di Dusun Malatan?">Bagaimana pelaksanaan Merti Dusun &amp; Gelar Budaya Malatan?</button>
+            </div>
+          </div>
+
+          <div class="qa-main">
+            <div class="chat-box" id="chatBox">
+              <div class="chat-msg bot">
+                <strong>Sejarawan Digital Malatan:</strong>
+                <p>Selamat datang! Saya memuat basis data sejarah lokal <strong>Dusun Malatan &amp; Desa Bansari</strong> berdasarkan literatur akademik, monografi wilayah Kabupaten Temanggung, dan kajian sosial budaya. Silakan klik topik di samping atau ketik pertanyaan Anda di bawah.</p>
+              </div>
+            </div>
+            <form class="chat-input-row" id="qaForm">
+              <input type="text" id="qaInput" placeholder="Tanyakan tentang sejarah Malatan, Desa Bansari, tradisi, tokoh, atau geografi..." required />
+              <button type="submit" class="btn-primary">Tanyakan</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: LOCAL HISTORY QUIZ -->
+      <div class="tab-panel" id="tab-quiz">
+        <div class="quiz-container" id="quizContainer">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+
+      <!-- TAB 3: ORAL HISTORY ARCHIVE -->
+      <div class="tab-panel" id="tab-oral">
+        <div class="oral-grid">
+          <form class="oral-form" id="oralForm">
+            <h4>Formulir Dokumentasi Sejarah Lisan (Oral History)</h4>
+            <p class="muted-small">Karena sebagian kisah babad alas Dusun Malatan diwariskan secara lisan oleh para sesepuh, Anda dapat mencatat dan menyimpan hasil wawancara informan di sini.</p>
+            <label>Nama Narasumber / Sesepuh Dusun</label>
+            <input type="text" id="oralSpeaker" placeholder="Contoh: Mbah Karto (Sesepuh RT 02 Dusun Malatan)" required />
+
+            <label>Kategori Riwayat</label>
+            <select id="oralCategory">
+              <option value="Asal-usul & Babad Alas">Asal-usul &amp; Babad Alas Dusun</option>
+              <option value="Tradisi Merti Dusun / Nyadran">Tradisi Merti Dusun / Nyadran</option>
+              <option value="Sejarah Pertanian Tembakau">Sejarah Pertanian Tembakau</option>
+              <option value="Kerukunan & Sejarah Tempat Ibadah">Kerukunan &amp; Sejarah Tempat Ibadah</option>
+            </select>
+
+            <label>Catatan Tuturan Sejarah Lisan</label>
+            <textarea id="oralContent" rows="4" placeholder="Tuliskan kisah, tahun perkiraan, atau kesaksian sejarah yang dituturkan..." required></textarea>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">💾 Simpan ke Arsip Lokal</button>
+              <button type="button" class="btn-outline" id="exportOralBtn">📥 Unduh JSON Arsip</button>
+            </div>
+          </form>
+
+          <div class="oral-list-box">
+            <h4>Daftar Catatan Sejarah Lisan Tersimpan</h4>
+            <div id="oralList" class="oral-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: ACADEMIC REFERENCES & CITATIONS -->
+  <section class="section section-alt" id="referensi">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">06 · DAFTAR PUSTAKA &amp; SUMBER TERVERIFIKASI</span>
+          <h2>Referensi Ilmiah &amp; Sumber Dokumentasi</h2>
+          <p>Seluruh narasi dalam portal ini disusun berdasarkan rujukan penelitian akademik universitas, publikasi pemerintah daerah Kabupaten Temanggung, dan dokumentasi kebudayaan lereng Sindoro. Klik tombol <strong>Salin Sitasi</strong> untuk mengutip.</p>
+        </div>
+      </div>
+
+      <div class="reference-list" id="referenceList">
+        <!-- Populated dynamically by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- NAVIGASI ANTAR-HALAMAN (PREV / NEXT PAGE DOCK) -->
+  <div class="container page-pager-wrap">
+    <div class="page-pager-dock" id="pagePagerDock">
+      <button class="btn-outline pager-btn" id="prevPageBtn">← Halaman Sebelumnya</button>
+      <div class="pager-indicator" id="pagerIndicator">Halaman 1 / 7 · Beranda</div>
+      <button class="btn-primary pager-btn" id="nextPageBtn">Halaman Berikutnya →</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Portal Sejarah &amp; Kebudayaan Dusun Malatan — Desa Bansari</strong>
+        <p>Kecamatan Bansari, Kabupaten Temanggung, Jawa Tengah · Lereng Timur Gunung Sindoro.</p>
+      </div>
+      <div class="footer-meta">
+        <span>Dikembangkan untuk Pelestarian Sejarah Lokal &amp; Edukasi Generasi Muda</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- POP-UP MODAL DETAIL BACAAN (KONTRAS TINGGI & MUDAH DIBACA DI TEMA TERANG / GELAP) -->
+  <div class="ui-popup-backdrop" id="detailPopupModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="ui-popup-card" role="document">
+      <div class="ui-popup-header">
+        <div class="ui-popup-badges">
+          <span class="ui-popup-pill" id="popupCategoryBadge">ARSIP SEJARAH</span>
+          <span class="ui-popup-subpill" id="popupMetaBadge">Dusun Malatan · Desa Bansari</span>
+        </div>
+        <button type="button" class="ui-popup-close" id="closePopupBtn" aria-label="Tutup Pop-up">✕</button>
+      </div>
+      <div class="ui-popup-body">
+        <h3 class="ui-popup-title" id="popupTitle">Judul Detail</h3>
+        <div class="ui-popup-content" id="popupBodyText"></div>
+        <div class="ui-popup-highlight" id="popupHighlightBox"></div>
+      </div>
+      <div class="ui-popup-footer">
+        <button type="button" class="btn-outline" id="copyPopupBtn">📋 Salin Teks Detail</button>
+        <button type="button" class="btn-primary" id="okPopupBtn">Tutup Jendela Baca</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js?v=20261107g"></script>
+</body>
+</html>

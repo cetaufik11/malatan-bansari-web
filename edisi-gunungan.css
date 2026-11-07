@@ -1,0 +1,1919 @@
+/* =========================================================================
+   EDISI II: ARSITEKTUR KAYON GUNUNGAN & RIGEN BAMBU 3D (edisi-gunungan.css)
+   ========================================================================= */
+
+:root[data-theme="light"] {
+  --bg-primary: #f4efe0;
+  --bg-secondary: rgba(238, 230, 209, 0.88);
+  --bg-card: rgba(255, 254, 249, 0.95);
+  --bg-card-hover: #ffffff;
+  --border-color: rgba(154, 52, 18, 0.26);
+  --border-strong: rgba(20, 83, 45, 0.35);
+  --text-primary: #091e13;
+  --text-secondary: #1b3b29;
+  --text-muted: #385e47;
+  --accent-gold: #9a3412;
+  --accent-gold-bright: #b45309;
+  --accent-gold-soft: #fef3c7;
+  --accent-emerald: #14532d;
+  --accent-emerald-bright: #15803d;
+  --accent-emerald-soft: #dcfce7;
+  --shadow-lg: 0 18px 44px rgba(24, 43, 29, 0.12);
+}
+
+:root[data-theme="dark"] {
+  --bg-primary: #091017;
+  --bg-secondary: rgba(16, 27, 39, 0.84);
+  --bg-card: rgba(19, 32, 46, 0.9);
+  --bg-card-hover: rgba(25, 42, 60, 0.96);
+  --border-color: rgba(245, 158, 11, 0.26);
+  --border-strong: rgba(52, 211, 153, 0.32);
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --accent-gold: #f59e0b;
+  --accent-gold-bright: #fbbf24;
+  --accent-gold-soft: rgba(245, 158, 11, 0.16);
+  --accent-emerald: #10b981;
+  --accent-emerald-bright: #34d399;
+  --accent-emerald-soft: rgba(16, 185, 129, 0.16);
+  --shadow-lg: 0 22px 50px rgba(0, 0, 0, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.68;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+:root[data-theme="light"] body {
+  background:
+    radial-gradient(circle at 85% 12%, rgba(253, 224, 71, 0.45) 0%, transparent 48%),
+    radial-gradient(circle at 12% 85%, rgba(22, 163, 74, 0.18) 0%, transparent 52%),
+    linear-gradient(160deg, #f8f4e8 0%, #ede4cd 52%, #e6f2e2 100%);
+  background-attachment: fixed;
+}
+
+body.gate-locked {
+  overflow: hidden;
+}
+
+h1, h2, h3, .serif {
+  font-family: 'Cinzel', 'Cormorant Garamond', Georgia, serif;
+  line-height: 1.22;
+}
+
+/* =========================================================================
+   1. TAMPILAN AWAL: ATMOSPHERIC TWILIGHT SINDORO & 3D BELL SPOTLIGHT
+   ========================================================================= */
+.kayon-split-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #080d0b;
+  user-select: none;
+  transition:
+    opacity 1.05s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.05s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 1.05s;
+}
+
+.kayon-split-gate.gate-opened {
+  opacity: 0;
+  transform: scale(1.06);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.bell-scene {
+  --bell-sway: 0deg;
+  --bg-shift-x: 0px;
+  --bg-shift-y: 0px;
+  background: radial-gradient(ellipse 95% 85% at 50% 38%, #121d19 0%, #09100e 58%, #050807 100%);
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+  user-select: none;
+  padding: 40px 20px;
+}
+
+/* Lapisan Panorama Siluet Gunung Sindoro yang Halus & Organik */
+.bell-bg-panorama {
+  position: absolute;
+  inset: -4%;
+  z-index: 1;
+  background-size: cover;
+  background-position: center 32%;
+  background-repeat: no-repeat;
+  opacity: 0.24;
+  filter: brightness(0.46) saturate(0.75) contrast(1.06);
+  -webkit-mask-image: radial-gradient(ellipse 82% 74% at 50% 48%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.45) 65%, transparent 96%);
+  mask-image: radial-gradient(ellipse 82% 74% at 50% 48%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.45) 65%, transparent 96%);
+  transform: translate3d(var(--bg-shift-x), var(--bg-shift-y), 0) scale(1.04);
+  animation: slowPanoramaBreath 20s ease-in-out infinite alternate;
+  transition:
+    opacity 1.15s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 1.15s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s ease-out;
+  pointer-events: none;
+}
+
+@keyframes slowPanoramaBreath {
+  0% { transform: translate3d(var(--bg-shift-x), var(--bg-shift-y), 0) scale(1.03); }
+  100% { transform: translate3d(var(--bg-shift-x), calc(var(--bg-shift-y) - 8px), 0) scale(1.08); }
+}
+
+.bell-scene:hover .bell-bg-panorama {
+  opacity: 0.34;
+  filter: brightness(0.58) saturate(0.88) contrast(1.06);
+}
+
+.bell-scene.lit .bell-bg-panorama {
+  opacity: 0.88;
+  filter: brightness(1.08) saturate(1.18) contrast(1.06);
+}
+
+/* Gradien Atmosfer Senja & Embun Pegunungan */
+.bell-ambient-aurora {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(circle at 50% 24%, rgba(255, 210, 140, 0.12) 0%, transparent 52%),
+    radial-gradient(ellipse 80% 50% at 20% 82%, rgba(16, 85, 62, 0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 50% at 82% 78%, rgba(180, 110, 38, 0.12) 0%, transparent 65%),
+    linear-gradient(180deg, rgba(6, 10, 9, 0.72) 0%, rgba(9, 16, 13, 0.22) 48%, rgba(6, 10, 9, 0.85) 100%);
+  pointer-events: none;
+  transition: opacity 1.1s ease, background 0.9s ease;
+}
+
+.bell-scene.lit .bell-ambient-aurora {
+  background:
+    radial-gradient(circle at 50% 44%, rgba(255, 240, 192, 0.48) 0%, rgba(255, 204, 118, 0.22) 38%, transparent 72%),
+    radial-gradient(ellipse 80% 50% at 20% 82%, rgba(16, 110, 78, 0.25) 0%, transparent 65%),
+    linear-gradient(180deg, rgba(6, 10, 9, 0.26) 0%, rgba(9, 16, 13, 0.05) 50%, rgba(6, 10, 9, 0.52) 100%);
+}
+
+/* Aliran Kabut Halus Lereng Sindoro */
+.bell-mist-drift {
+  position: absolute;
+  left: -15%;
+  right: -15%;
+  height: 240px;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(ellipse 65% 50% at 50% 50%, rgba(215, 232, 225, 0.065) 0%, transparent 75%);
+  filter: blur(28px);
+}
+
+.mist-drift-1 {
+  bottom: 4%;
+  animation: driftMistLeftRight 18s ease-in-out infinite alternate;
+}
+
+.mist-drift-2 {
+  bottom: 16%;
+  opacity: 0.7;
+  animation: driftMistLeftRight 24s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes driftMistLeftRight {
+  0% { transform: translateX(-4%) scaleY(0.95); }
+  100% { transform: translateX(4%) scaleY(1.08); }
+}
+
+/* Partikel Cahaya Halus (Kunang-kunang / Embun Senja) */
+.bell-fireflies {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.firefly-mote {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 226, 168, 0.65);
+  box-shadow: 0 0 10px rgba(255, 210, 130, 0.55);
+  opacity: 0.22;
+  animation: floatFirefly 9s ease-in-out infinite alternate;
+}
+
+.firefly-mote.m1 { left: 22%; top: 64%; animation-duration: 8s; animation-delay: 0s; }
+.firefly-mote.m2 { left: 76%; top: 58%; animation-duration: 10.5s; animation-delay: 1.4s; }
+.firefly-mote.m3 { left: 31%; top: 34%; animation-duration: 9.2s; animation-delay: 2.2s; }
+.firefly-mote.m4 { left: 68%; top: 30%; animation-duration: 11s; animation-delay: 0.8s; }
+.firefly-mote.m5 { left: 18%; top: 44%; animation-duration: 9.8s; animation-delay: 3.1s; }
+.firefly-mote.m6 { left: 82%; top: 72%; animation-duration: 8.6s; animation-delay: 1.9s; }
+
+@keyframes floatFirefly {
+  0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0.14; }
+  50% { opacity: 0.48; }
+  100% { transform: translate3d(14px, -22px, 0) scale(1.15); opacity: 0.2; }
+}
+
+/* Tulisan Standar Biasa di Atas Lampu soal Dusun Malatan */
+.bell-top-caption {
+  position: relative;
+  z-index: 6;
+  max-width: 760px;
+  text-align: center;
+  margin-bottom: 22px;
+  padding: 8px 20px;
+  background: transparent;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.88);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease;
+}
+
+.bell-caption-kicker {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: rgba(255, 228, 178, 0.68);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 228, 178, 0.16);
+  padding: 5px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+  backdrop-filter: blur(6px);
+  transition: color 0.75s ease, border-color 0.75s ease, background 0.75s ease;
+}
+
+.bell-caption-title {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  font-size: clamp(28px, 3.8vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  line-height: 1.22;
+  color: rgba(255, 255, 255, 0.86);
+  margin: 0 0 10px;
+  transition: color 0.75s ease, text-shadow 0.75s ease;
+}
+
+.bell-caption-desc {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  font-size: clamp(16.5px, 2vw, 20.5px);
+  font-weight: 400;
+  line-height: 1.62;
+  color: rgba(235, 240, 238, 0.64);
+  max-width: 660px;
+  margin: 0 auto;
+  transition: color 0.75s ease;
+}
+
+.bell-scene.lit .bell-caption-kicker {
+  color: rgba(255, 236, 195, 0.95);
+  border-color: rgba(255, 220, 155, 0.38);
+  background: rgba(45, 34, 20, 0.45);
+}
+
+.bell-scene.lit .bell-caption-title {
+  color: #fffaf0;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.9), 0 0 28px rgba(255, 215, 145, 0.22);
+}
+
+.bell-scene.lit .bell-caption-desc {
+  color: rgba(255, 244, 224, 0.88);
+}
+
+/* Struktur Lonceng 3D Presisi dengan Ayunan Natural */
+.bell-wrapper {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 30px;
+  outline: none;
+  transform-origin: 50% -260px;
+  transform: rotate(var(--bell-sway, 0deg));
+  animation: gentleBellPendulum 7s ease-in-out infinite alternate;
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes gentleBellPendulum {
+  0% { transform: rotate(calc(var(--bell-sway, 0deg) - 0.65deg)); }
+  100% { transform: rotate(calc(var(--bell-sway, 0deg) + 0.65deg)); }
+}
+
+.bell-wrapper:active,
+.bell-scene.lit .bell-wrapper {
+  transform: translateY(4px) rotate(0deg);
+}
+
+.bell-svg {
+  width: 240px;
+  height: 220px;
+  overflow: visible;
+  z-index: 3;
+  filter: drop-shadow(0 20px 36px rgba(0, 0, 0, 0.85));
+  transition: filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bell-scene.lit .bell-svg {
+  filter:
+    drop-shadow(0 16px 32px rgba(0, 0, 0, 0.72))
+    drop-shadow(0 18px 46px rgba(255, 232, 168, 0.75))
+    drop-shadow(0 28px 95px rgba(255, 198, 98, 0.62));
+}
+
+/* Transisi Pijar Bohlam yang Organik & Sangat Terang Saat Menyala */
+.svg-inner-lit {
+  opacity: 0.22;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s ease;
+}
+
+.svg-clapper-lit {
+  opacity: 0.28;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s ease;
+}
+
+.svg-clapper-dark {
+  opacity: 0.85;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bell-wrapper:hover .svg-inner-lit {
+  opacity: 0.58;
+}
+
+.bell-wrapper:hover .svg-clapper-lit {
+  opacity: 0.68;
+}
+
+/* Sorotan Cahaya ke Bawah (Dual-Layer Volumetric Spotlight Terang & Halus) */
+.spotlight {
+  position: absolute;
+  top: 148px;
+  width: 560px;
+  height: 360px;
+  background: radial-gradient(
+    ellipse at top,
+    rgba(255, 245, 212, 0.76) 0%,
+    rgba(255, 216, 138, 0.38) 42%,
+    rgba(255, 186, 92, 0.14) 68%,
+    transparent 86%
+  );
+  filter: blur(26px);
+  opacity: 0.26;
+  pointer-events: none;
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.spotlight-core {
+  position: absolute;
+  top: 154px;
+  width: 310px;
+  height: 240px;
+  background: radial-gradient(
+    ellipse at top,
+    rgba(255, 253, 242, 0.95) 0%,
+    rgba(255, 232, 170, 0.56) 48%,
+    transparent 82%
+  );
+  filter: blur(14px);
+  opacity: 0.2;
+  pointer-events: none;
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+}
+
+.bell-wrapper:hover .spotlight,
+.bell-wrapper:hover .spotlight-core {
+  opacity: 0.62;
+}
+
+/* Tombol Interaktif yang Halus & Natural */
+.glow-btn {
+  position: relative;
+  z-index: 5;
+  padding: 13px 32px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  opacity: 0.78;
+  transition:
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.75s ease,
+    color 0.75s ease,
+    background 0.75s ease,
+    border-color 0.75s ease;
+}
+
+.glow-btn:hover {
+  opacity: 0.95;
+  color: #fff8eb;
+  background: rgba(45, 36, 24, 0.55);
+  border-color: rgba(255, 220, 160, 0.34);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 18px rgba(255, 210, 135, 0.12);
+}
+
+/* STATE MENYALA TERANG BERSINAR & SINEMATIK */
+.bell-scene.lit .svg-inner-lit {
+  opacity: 1;
+  filter: drop-shadow(0 0 26px rgba(255, 242, 195, 0.98));
+}
+
+.bell-scene.lit .svg-clapper-lit {
+  opacity: 1;
+  filter:
+    url(#bulbGlow)
+    drop-shadow(0 0 18px #ffffff)
+    drop-shadow(0 0 44px rgba(255, 230, 155, 1))
+    drop-shadow(0 0 88px rgba(255, 192, 92, 0.92));
+}
+
+.bell-scene.lit .svg-clapper-dark {
+  opacity: 0;
+}
+
+.bell-scene.lit .spotlight {
+  opacity: 1;
+  transform: scale(1.16);
+}
+
+.bell-scene.lit .spotlight-core {
+  opacity: 1;
+  transform: scale(1.12);
+}
+
+.bell-scene.lit .glow-btn {
+  opacity: 1;
+  color: #ffffff;
+  background: rgba(68, 50, 26, 0.88);
+  border-color: rgba(255, 236, 185, 0.85);
+  text-shadow: 0 0 12px rgba(255, 242, 205, 0.65);
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.65),
+    0 0 38px rgba(255, 218, 138, 0.65),
+    inset 0 0 18px rgba(255, 240, 195, 0.35);
+}
+
+@keyframes spinMedallionHalo {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* =========================================================================
+   2. ANIMASI PINDAH HALAMAN: KISI RIGEN BAMBU 3D & AWAN KABUT SINDORO
+   ========================================================================= */
+.rigen-shutter-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 9600;
+  pointer-events: none;
+  visibility: hidden;
+  perspective: 1400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.rigen-shutter-curtain.shutter-closing,
+.rigen-shutter-curtain.shutter-opening {
+  visibility: visible;
+  pointer-events: all;
+}
+
+.rigen-slats-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  transform-style: preserve-3d;
+}
+
+.rigen-slat {
+  height: 100%;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(180, 83, 9, 0.92) 0px,
+      rgba(180, 83, 9, 0.92) 10px,
+      rgba(120, 53, 15, 0.95) 10px,
+      rgba(120, 53, 15, 0.95) 20px
+    ),
+    linear-gradient(180deg, #14532d 0%, #451a03 100%);
+  border-right: 1.5px solid rgba(253, 224, 71, 0.45);
+  transform-origin: center center;
+  transform: rotateY(92deg) scaleX(0.2);
+  opacity: 0;
+  transition:
+    transform 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.32s ease;
+  transition-delay: var(--slat-delay, 0ms);
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.55);
+}
+
+.rigen-shutter-curtain.shutter-closing .rigen-slat {
+  transform: rotateY(0deg) scaleX(1.02);
+  opacity: 1;
+}
+
+.rigen-shutter-curtain.shutter-opening .rigen-slat {
+  transform: rotateY(-92deg) scaleX(0.2);
+  opacity: 0;
+}
+
+.rigen-shutter-curtain.shutter-reset .rigen-slat {
+  transition: none !important;
+}
+
+/* Rolling Mountain Cloud Mist Waves */
+.mist-wave {
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  height: 36vh;
+  background: radial-gradient(ellipse at center, rgba(255, 254, 248, 0.85) 0%, rgba(187, 247, 208, 0.35) 55%, transparent 75%);
+  filter: blur(18px);
+  opacity: 0;
+  transition: transform 0.6s ease, opacity 0.45s ease;
+  z-index: 2;
+}
+
+.mist-wave-top {
+  top: -15vh;
+  transform: translateX(-25%);
+}
+
+.mist-wave-bottom {
+  bottom: -15vh;
+  transform: translateX(25%);
+}
+
+.rigen-shutter-curtain.shutter-closing .mist-wave {
+  opacity: 0.9;
+  transform: translateX(0%);
+}
+
+/* Center Crest Pop-up during Rigen Shutter Transition */
+.shutter-center-crest {
+  position: relative;
+  z-index: 6;
+  background: #fffef9;
+  color: #091e13;
+  border: 3px solid #9a3412;
+  border-radius: 22px;
+  padding: 24px 38px;
+  text-align: center;
+  box-shadow: 0 28px 65px rgba(0, 0, 0, 0.65), 0 0 0 6px rgba(253, 224, 71, 0.35);
+  transform: scale(0.7) rotateX(25deg);
+  opacity: 0;
+  transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.28s ease;
+  transition-delay: 120ms;
+}
+
+.rigen-shutter-curtain.shutter-closing .shutter-center-crest {
+  transform: scale(1) rotateX(0deg);
+  opacity: 1;
+}
+
+.rigen-shutter-curtain.shutter-opening .shutter-center-crest {
+  transform: scale(1.08);
+  opacity: 0;
+  transition-delay: 0ms;
+}
+
+.shutter-gunungan-icon {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.shutter-kicker {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #14532d;
+  margin-bottom: 6px;
+}
+
+.shutter-title {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  color: #7c2d12;
+  font-weight: 800;
+}
+
+/* =========================================================================
+   3. WATERMARK LOGO KECAMATAN BANSARI & PANGGUNG RIGEN 3D
+   ========================================================================= */
+.bansari-fixed-seal {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.seal-orbit-wrap {
+  position: relative;
+  width: min(68vw, 560px);
+  height: min(68vw, 560px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.14;
+}
+
+:root[data-theme="dark"] .seal-orbit-wrap {
+  opacity: 0.16;
+}
+
+.seal-orbit-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--accent-gold);
+  animation: spinMedallionHalo 85s linear infinite;
+}
+
+.seal-center-img {
+  width: 54%;
+  height: 54%;
+  object-fit: contain;
+}
+
+/* 3D Floating Bamboo Rigen & Golden Tobacco Strands Stage */
+.Floating3DCultureStage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  perspective: 1100px;
+  overflow: hidden;
+}
+
+.floating-3d-objects {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.rigen-3d-tray {
+  position: absolute;
+  left: var(--tray-x, 80%);
+  top: var(--tray-y, 20%);
+  width: var(--tray-w, 170px);
+  height: var(--tray-h, 110px);
+  border-radius: 14px;
+  border: 3px solid rgba(180, 83, 9, 0.55);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(217, 119, 6, 0.22) 0px,
+      rgba(217, 119, 6, 0.22) 6px,
+      rgba(254, 240, 138, 0.32) 6px,
+      rgba(254, 240, 138, 0.32) 12px
+    ),
+    radial-gradient(circle, rgba(22, 163, 74, 0.35), rgba(180, 83, 9, 0.25));
+  box-shadow: 0 18px 34px rgba(20, 83, 45, 0.15);
+  transform-style: preserve-3d;
+  animation: floatRigenTray var(--tray-dur, 9s) ease-in-out infinite alternate;
+  animation-delay: var(--tray-delay, 0s);
+  opacity: 0.55;
+}
+
+@keyframes floatRigenTray {
+  0% {
+    transform: translate3d(0, 0, var(--tray-z, -40px)) rotateX(54deg) rotateZ(-18deg) rotateY(-8deg);
+  }
+  100% {
+    transform: translate3d(12px, -22px, var(--tray-z, -40px)) rotateX(42deg) rotateZ(12deg) rotateY(14deg);
+  }
+}
+
+/* =========================================================================
+   4. STUDIO APP SHELL: SIDEBAR DOCK KIRI + MAIN 3D STAGE
+   ========================================================================= */
+.top-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-emerald), var(--accent-gold));
+  width: 0%;
+  z-index: 9999;
+}
+
+.studio-layout {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 290px 1fr;
+  min-height: 100vh;
+}
+
+/* Left Sidebar Dock */
+.babad-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: var(--bg-card);
+  border-right: 2px solid var(--border-color);
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text-primary);
+  padding-bottom: 16px;
+  border-bottom: 1.5px dashed var(--border-color);
+}
+
+.sidebar-crest {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: var(--accent-gold-soft);
+  border: 1.5px solid var(--accent-gold);
+  padding: 5px;
+  flex-shrink: 0;
+}
+
+.sidebar-crest img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.brand-eyebrow {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: var(--accent-gold);
+}
+
+.sidebar-brand-text strong {
+  display: block;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.sidebar-brand-text small {
+  font-size: 11.5px;
+  color: var(--accent-emerald-bright);
+  font-weight: 700;
+}
+
+.sidebar-caption {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  color: var(--text-muted);
+  margin: 14px 0 8px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 13.5px;
+  border: 1.5px solid transparent;
+  transition: all 0.22s ease;
+}
+
+.sidebar-nav a:hover {
+  background: var(--bg-secondary);
+  color: var(--accent-gold);
+  transform: translateX(4px);
+}
+
+.sidebar-nav a.active-nav {
+  background: var(--accent-emerald);
+  color: #ffffff;
+  border-color: var(--accent-gold);
+  box-shadow: 0 8px 20px rgba(20, 83, 45, 0.25);
+}
+
+.nav-num {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.14);
+}
+
+.sidebar-footer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1.5px dashed var(--border-color);
+}
+
+.theme-switch-btn {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1.5px solid var(--accent-gold);
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.theme-switch-btn:hover {
+  transform: translateY(-2px);
+}
+
+.sidebar-row-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* Main Stage Column */
+.babad-stage-main {
+  padding: 24px 36px 48px;
+  max-width: 1220px;
+  width: 100%;
+  margin: 0 auto;
+  perspective: 1300px;
+}
+
+.stage-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  padding: 12px 20px;
+  border-radius: 16px;
+  margin-bottom: 26px;
+  box-shadow: var(--shadow-lg);
+}
+
+.topbar-crumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.crumb-badge {
+  color: var(--accent-emerald-bright);
+}
+
+.crumb-chapter {
+  color: var(--accent-gold);
+  font-weight: 800;
+}
+
+.edition-switch-pill {
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--accent-emerald);
+  background: var(--accent-emerald-soft);
+  border: 1.5px solid var(--accent-emerald-bright);
+  padding: 6px 14px;
+  border-radius: 999px;
+  transition: all 0.2s;
+}
+
+.edition-switch-pill:hover {
+  background: var(--accent-emerald);
+  color: #ffffff;
+}
+
+/* =========================================================================
+   5. SISTEM MULTI-HALAMAN 3D BOOK-FLIP & ANIMASI ORIGAMI SCROLL DUA ARAH
+   ========================================================================= */
+.page-section {
+  display: none !important;
+}
+
+.page-section.active-page {
+  display: block !important;
+  min-height: calc(100vh - 230px);
+  animation: bookPageFlipIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: left center;
+}
+
+@keyframes bookPageFlipIn {
+  0% {
+    opacity: 0;
+    transform: perspective(1300px) rotateY(-18deg) translateX(32px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1300px) rotateY(0deg) translateX(0) scale(1);
+  }
+}
+
+/* Bidirectional 3D Origami Scroll Animation (Scroll Down & Scroll Up) */
+.origami-anim {
+  opacity: 0;
+  transform-origin: center top;
+  will-change: transform, opacity;
+  transition:
+    transform 0.68s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.55s ease;
+  transition-delay: var(--origami-delay, 0ms);
+}
+
+.origami-anim.fold-bottom {
+  opacity: 0;
+  transform: perspective(1000px) rotateX(-28deg) translate3d(0, 44px, -30px) scale(0.94);
+}
+
+.origami-anim.fold-top {
+  opacity: 0;
+  transform: perspective(1000px) rotateX(28deg) translate3d(0, -40px, -30px) scale(0.94);
+}
+
+.origami-anim.unfolded {
+  opacity: 1;
+  transform: perspective(1000px) rotateX(0deg) translate3d(0, 0, 0) scale(1);
+}
+
+/* =========================================================================
+   6. KOMPONEN BENTO HERO, DIORAMA 3D, TIMELINE, PETA & ENSIKLOPEDIA
+   ========================================================================= */
+.bento-hero-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.9fr;
+  gap: 26px;
+  align-items: stretch;
+}
+
+.bento-main-card,
+.bento-side-card,
+.section-header,
+.timeline-card,
+.map-canvas-box,
+.map-detail-panel,
+.archive-card,
+.peace-card,
+.tab-panel,
+.ref-item,
+.page-pager-dock {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: 20px;
+  padding: 26px;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(16px);
+}
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.pill {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+.pill-gold {
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+  border: 1.5px solid var(--accent-gold);
+}
+
+.pill-emerald {
+  background: var(--accent-emerald-soft);
+  color: var(--accent-emerald-bright);
+  border: 1.5px solid var(--accent-emerald-bright);
+}
+
+.bento-main-card h1 {
+  font-size: clamp(2rem, 3.3vw, 3rem);
+  margin-bottom: 16px;
+}
+
+.bento-main-card h1 em {
+  color: var(--accent-gold);
+}
+
+.hero-lead {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 16.5px;
+  line-height: 1.78;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 24px;
+  padding-left: 16px;
+  border-left: 4px solid var(--accent-emerald);
+}
+
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+
+.btn-primary, .btn-secondary, .btn-outline {
+  cursor: pointer;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 11px 20px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-xs {
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-emerald), #059669);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 8px 20px rgba(20, 83, 45, 0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+  border: 1.5px solid var(--accent-gold);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-color);
+}
+
+.btn-outline:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.stat-item {
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-color);
+  padding: 14px 16px;
+  border-radius: 14px;
+}
+
+.stat-item strong {
+  display: block;
+  font-size: 21px;
+  font-weight: 800;
+  color: var(--accent-emerald-bright);
+}
+
+.stat-item span {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* 3D Interactive Diorama Box in Beranda */
+.card-header-tag {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  color: var(--accent-gold);
+  margin-bottom: 6px;
+}
+
+.bento-side-card h3 {
+  font-size: 22px;
+  margin-bottom: 14px;
+}
+
+.diorama-3d-box {
+  position: relative;
+  height: 215px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #064e3b 0%, #071912 100%);
+  border: 2px solid var(--accent-gold);
+  margin-bottom: 16px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transform: perspective(800px) rotateX(var(--dio-rx, 0deg)) rotateY(var(--dio-ry, 0deg));
+  transition: transform 0.15s ease-out;
+  cursor: grab;
+}
+
+.diorama-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.diorama-sun {
+  position: absolute;
+  right: 36px;
+  top: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fef08a 0%, #f59e0b 70%, transparent 100%);
+  box-shadow: 0 0 28px #fde047;
+}
+
+.diorama-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.diorama-floating-badge {
+  position: absolute;
+  background: rgba(255, 254, 248, 0.94);
+  color: #091e13;
+  border: 1.5px solid #b45309;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+  transform: translate3d(var(--badge-dx, 0px), var(--badge-dy, 0px), 30px);
+  transition: transform 0.15s ease-out;
+}
+
+.badge-embung { top: 24px; left: 18px; }
+.badge-malatan { top: 82px; left: 32%; }
+.badge-tembakau { bottom: 34px; right: 16px; }
+
+.diorama-hint {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fde047;
+}
+
+.geo-list {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.geo-list li {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border-color);
+  font-size: 13.5px;
+}
+
+.geo-list li span {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+/* Section Headers */
+.section-header {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-kicker {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  color: var(--accent-gold);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.section-header h2 {
+  font-size: clamp(1.75rem, 2.8vw, 2.35rem);
+  margin-bottom: 6px;
+}
+
+.section-header p {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 15.5px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Timeline 2-Column Bento Deck Grid */
+.timeline-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-btn {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn.active, .filter-btn:hover {
+  background: var(--accent-emerald);
+  color: #ffffff;
+  border-color: var(--accent-emerald);
+}
+
+.timeline-deck-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.timeline-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-top: 5px solid var(--accent-gold);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.timeline-card:hover {
+  transform: translateY(-6px);
+}
+
+.tl-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.tl-year {
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+  border: 1.5px solid var(--accent-gold);
+  font-weight: 800;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.tl-badge {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--accent-emerald-bright);
+}
+
+.timeline-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.timeline-card p {
+  font-size: 14.5px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.tl-source {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-color);
+}
+
+/* Spatial Map & Contour Styles */
+.topo-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-color);
+  padding: 12px 16px;
+  border-radius: 14px;
+}
+
+.topo-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.topo-telemetry {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.topo-telemetry strong {
+  color: var(--accent-gold);
+  font-family: monospace;
+}
+
+.map-explorer-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.9fr;
+  gap: 22px;
+}
+
+.cultural-map-svg {
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 2px solid var(--border-strong);
+  cursor: crosshair;
+  margin-bottom: 14px;
+}
+
+.grid-coord {
+  fill: rgba(226, 232, 240, 0.65);
+  font-size: 9px;
+  font-family: monospace;
+}
+
+.contour-index {
+  fill: none;
+  stroke: #34d399;
+  stroke-width: 1.85;
+  stroke-opacity: 0.78;
+}
+
+.contour-sub {
+  fill: none;
+  stroke: #10b981;
+  stroke-width: 1;
+  stroke-dasharray: 5 3;
+  stroke-opacity: 0.48;
+}
+
+.map-pin { cursor: pointer; }
+.pin-pulse { fill: rgba(245, 158, 11, 0.3); transition: all 0.25s; }
+.pin-core { fill: #059669; stroke: #ffffff; stroke-width: 2px; transition: all 0.25s; }
+.pin-num { fill: #ffffff; font-size: 10px; font-weight: 800; pointer-events: none; }
+.map-pin.active .pin-core, .map-pin:hover .pin-core { fill: #f59e0b; r: 12; }
+.map-pin.active .pin-pulse, .map-pin:hover .pin-pulse { fill: rgba(245, 158, 11, 0.52); r: 23; }
+.pin-label { fill: #ffffff; font-size: 11px; font-weight: 800; paint-order: stroke; stroke: #071712; stroke-width: 3.5px; }
+.pin-sublabel { fill: #fde68a; font-size: 9.5px; font-weight: 700; font-family: monospace; paint-order: stroke; stroke: #071712; stroke-width: 3px; }
+
+.elevation-profile-box {
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-color);
+  border-radius: 14px;
+  padding: 12px 16px;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--accent-emerald-bright);
+  margin-bottom: 6px;
+}
+
+.profile-header span {
+  color: var(--accent-gold);
+}
+
+.profile-svg {
+  width: 100%;
+  height: auto;
+}
+
+.profile-svg text {
+  fill: var(--text-primary);
+  font-weight: 700;
+}
+
+.spot-tag {
+  display: inline-block;
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+  border: 1.5px solid var(--accent-gold);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.spot-facts {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+  background: var(--bg-secondary);
+  padding: 14px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Encyclopedia, Peace Cards, QA, Quiz & References */
+.search-filter-bar {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 12px;
+}
+
+.search-filter-bar input, .search-filter-bar select,
+.chat-input-row input, .oral-form input, .oral-form select, .oral-form textarea {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-strong);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+.archive-grid, .peace-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.archive-card, .peace-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-left: 5px solid var(--accent-emerald);
+  transition: transform 0.22s ease;
+}
+
+.archive-card:hover, .peace-card:hover {
+  transform: translateY(-5px);
+}
+
+.archive-cat {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--accent-emerald-bright);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.archive-card h3, .peace-card h3 {
+  font-size: 21px;
+  margin-bottom: 10px;
+}
+
+.archive-card p, .peace-card p {
+  font-size: 14.5px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.archive-highlight, .theory-tag {
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+  border: 1.5px solid var(--accent-gold);
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.peace-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.interactive-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border-color);
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: var(--accent-emerald);
+  color: #ffffff;
+  border-color: var(--accent-emerald);
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.qa-layout, .oral-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 22px;
+}
+
+.quick-questions {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.q-chip {
+  text-align: left;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-color);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.q-chip:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.chat-box {
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.chat-msg {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 500;
+}
+
+.chat-msg.bot {
+  background: var(--bg-card);
+  border-left: 4px solid var(--accent-emerald);
+}
+
+.chat-msg.user {
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+  font-weight: 700;
+  border-right: 4px solid var(--accent-gold);
+  align-self: flex-end;
+}
+
+.chat-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.quiz-card { display: grid; gap: 14px; }
+.quiz-options { display: grid; gap: 10px; }
+.quiz-opt {
+  text-align: left;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-color);
+  padding: 12px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+.quiz-opt.correct { background: #dcfce7; color: #064e3b; border-color: #16a34a; }
+.quiz-opt.wrong { background: #fee2e2; color: #7f1d1d; border-color: #ef4444; }
+
+.oral-form { display: flex; flex-direction: column; gap: 10px; }
+.oral-form label { font-size: 13px; font-weight: 800; color: var(--text-secondary); }
+.oral-list { display: grid; gap: 12px; margin-top: 10px; max-height: 340px; overflow-y: auto; }
+.oral-item {
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-color);
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.reference-list { display: grid; gap: 14px; }
+.ref-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+.ref-text strong { display: block; color: var(--accent-gold); font-size: 13.5px; margin-bottom: 4px; }
+.ref-text p { font-size: 14.5px; color: var(--text-secondary); font-weight: 500; }
+
+.page-pager-dock {
+  margin-top: 26px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pager-indicator {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--accent-gold);
+}
+
+.footer {
+  padding: 24px 0 12px;
+  border-top: 1.5px solid var(--border-color);
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.card-popup-trigger {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--accent-emerald-bright);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* =========================================================================
+   7. POP-UP MODAL DETAIL & TOAST KONTRAS TINGGI
+   ========================================================================= */
+.ui-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10020;
+  background: rgba(9, 25, 16, 0.62);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
+.ui-popup-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ui-popup-card {
+  width: min(680px, 94vw);
+  max-height: 86vh;
+  overflow-y: auto;
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+  border: 2.5px solid var(--accent-gold);
+  border-radius: 22px;
+  padding: 28px 30px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+  transform: perspective(900px) rotateX(18deg) scale(0.92);
+  transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ui-popup-backdrop.open .ui-popup-card {
+  transform: perspective(900px) rotateX(0deg) scale(1);
+}
+
+.ui-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1.5px solid var(--border-color);
+  margin-bottom: 16px;
+}
+
+.ui-popup-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+.ui-popup-pill {
+  background: #fef3c7;
+  color: #7c2d12;
+  border: 1.5px solid #d97706;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.ui-popup-subpill {
+  background: #dcfce7;
+  color: #064e3b;
+  border: 1.5px solid #16a34a;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ui-popup-close {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.ui-popup-title {
+  font-size: clamp(1.65rem, 2.6vw, 2.15rem);
+  margin-bottom: 14px;
+}
+
+.ui-popup-content {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 16.5px;
+  line-height: 1.82;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+
+.ui-popup-highlight {
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+  border-left: 5px solid var(--accent-gold);
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.ui-popup-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1.5px solid var(--border-color);
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  max-width: 430px;
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+  border: 2px solid var(--accent-emerald);
+  border-left: 7px solid var(--accent-gold);
+  padding: 14px 22px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.32);
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: all 0.28s ease;
+  z-index: 10050;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 980px) {
+  .studio-layout {
+    grid-template-columns: 1fr;
+  }
+  .babad-sidebar {
+    position: relative;
+    height: auto;
+  }
+  .bento-hero-grid, .map-explorer-grid, .qa-layout, .oral-grid {
+    grid-template-columns: 1fr;
+  }
+}
