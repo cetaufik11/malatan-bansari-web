@@ -242,6 +242,7 @@ const DEFAULT_ORAL_ARCHIVES = [
 let scrollObserver = null;
 let currentPageIndex = 0;
 let isPageTransitioning = false;
+const IS_MOBILE_DEVICE = window.matchMedia("(max-width: 920px), (pointer: coarse)").matches;
 
 const NAV_PAGES = [
   { id: "beranda", label: "Beranda" },
@@ -267,9 +268,11 @@ document.addEventListener("DOMContentLoaded", () => {
   initReferences();
   initBidirectionalScrollAnimations();
   initMultiPageTobaccoNavigation();
-  initInteractive3DTilt();
-  initMicroParallax();
-  init3DTobaccoLightTheme();
+  if (!IS_MOBILE_DEVICE) {
+    initInteractive3DTilt();
+    initMicroParallax();
+    init3DTobaccoLightTheme();
+  }
   initDetailPopupModal();
 
   document.getElementById("printArchiveBtn").addEventListener("click", () => {
@@ -335,10 +338,10 @@ function initMultiPageTobaccoNavigation() {
   const nextBtn = document.getElementById("nextPageBtn");
   const indicator = document.getElementById("pagerIndicator");
 
-  // Build 32 overlapping Tobacco Leaves across an 8x4 grid to completely blanket the viewport
+  // Build overlapping Tobacco Leaves (12 on mobile for 60fps smoothness, 32 on desktop)
   if (layer) {
-    const cols = 8;
-    const rows = 4;
+    const cols = IS_MOBILE_DEVICE ? 4 : 8;
+    const rows = IS_MOBILE_DEVICE ? 3 : 4;
     let html = "";
     let idx = 0;
 
@@ -360,7 +363,7 @@ function initMultiPageTobaccoNavigation() {
         const rotStart = `${(idx * 47) % 360 - 180}deg`;
         const rotMid = `${((idx * 29) % 90) - 45}deg`;
         const rotEnd = `${(idx * 61) % 360 - 180}deg`;
-        const delayMs = ((r + c) % 5) * 32;
+        const delayMs = ((r + c) % 5) * (IS_MOBILE_DEVICE ? 18 : 32);
         const sizePx = 390 + ((idx * 23) % 110);
 
         html += `
@@ -377,19 +380,21 @@ function initMultiPageTobaccoNavigation() {
       }
     }
 
-    // Add 18 golden Sindoro dew / pollen spores that sparkle alongside the tobacco leaves
-    for (let s = 0; s < 18; s++) {
-      const sx = 8 + ((s * 37) % 84);
-      const sy = 10 + ((s * 53) % 80);
-      const sSize = 6 + (s % 5) * 2;
-      const sDx = ((s % 2 === 0 ? 1 : -1) * (25 + (s * 11) % 60)) + "px";
-      const sDy = (-30 - ((s * 17) % 55)) + "px";
-      const sDelay = (s % 6) * 35;
-      html += `
-        <span class="tobacco-spore"
-              style="--spore-x:${sx}%; --spore-y:${sy}%; --spore-size:${sSize}px;
-                     --spore-dx:${sDx}; --spore-dy:${sDy}; --spore-delay:${sDelay}ms;"></span>
-      `;
+    if (!IS_MOBILE_DEVICE) {
+      // Add 18 golden Sindoro dew / pollen spores on desktop
+      for (let s = 0; s < 18; s++) {
+        const sx = 8 + ((s * 37) % 84);
+        const sy = 10 + ((s * 53) % 80);
+        const sSize = 6 + (s % 5) * 2;
+        const sDx = ((s % 2 === 0 ? 1 : -1) * (25 + (s * 11) % 60)) + "px";
+        const sDy = (-30 - ((s * 17) % 55)) + "px";
+        const sDelay = (s % 6) * 35;
+        html += `
+          <span class="tobacco-spore"
+                style="--spore-x:${sx}%; --spore-y:${sy}%; --spore-size:${sSize}px;
+                       --spore-dx:${sDx}; --spore-dy:${sDy}; --spore-delay:${sDelay}ms;"></span>
+        `;
+      }
     }
 
     layer.innerHTML = html;
@@ -540,7 +545,7 @@ function initBidirectionalScrollAnimations() {
   const navLinks = document.querySelectorAll(".nav-links a");
   const sections = document.querySelectorAll("section[id]");
 
-  // Setup IntersectionObserver that triggers on BOTH entering and leaving (scroll down & scroll up)
+  // Setup IntersectionObserver (on mobile, unobserve once in view for 60fps native scrolling)
   scrollObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -548,10 +553,11 @@ function initBidirectionalScrollAnimations() {
         if (entry.isIntersecting) {
           el.classList.add("in-view");
           el.classList.remove("out-bottom", "out-top");
-        } else {
+          if (IS_MOBILE_DEVICE) {
+            scrollObserver.unobserve(el);
+          }
+        } else if (!IS_MOBILE_DEVICE) {
           el.classList.remove("in-view");
-          // Determine whether the element exited at the top of viewport (scrolled down past it)
-          // or exited at the bottom of viewport (scrolled up above it)
           if (entry.boundingClientRect.top < 0) {
             el.classList.add("out-top");
             el.classList.remove("out-bottom");
@@ -563,8 +569,8 @@ function initBidirectionalScrollAnimations() {
       });
     },
     {
-      threshold: 0.12,
-      rootMargin: "-30px 0px -30px 0px"
+      threshold: 0.08,
+      rootMargin: "0px 0px -15px 0px"
     }
   );
 
@@ -626,17 +632,20 @@ function initSindoroGate() {
   let isPulling = false;
   let startY = 0;
   let currentPullY = 0;
-  const PULL_THRESHOLD = 46; // Jarak tarik ke bawah (px) agar saklar lampu menyala
+  let rafPullId = null;
+  const PULL_THRESHOLD = 44; // Jarak tarik ke bawah (px) agar saklar lampu menyala
 
-  // Smooth interactive parallax on mouse move when not pulling
-  scene.addEventListener("pointermove", (e) => {
-    if (isLit || isPulling) return;
-    const nx = (e.clientX / window.innerWidth) - 0.5;
-    const ny = (e.clientY / window.innerHeight) - 0.5;
-    scene.style.setProperty("--bell-sway", `${(-nx * 2.2).toFixed(2)}deg`);
-    scene.style.setProperty("--bg-shift-x", `${(-nx * 14).toFixed(1)}px`);
-    scene.style.setProperty("--bg-shift-y", `${(-ny * 9).toFixed(1)}px`);
-  });
+  // Smooth interactive parallax on desktop mouse move when not pulling
+  if (!IS_MOBILE_DEVICE) {
+    scene.addEventListener("pointermove", (e) => {
+      if (isLit || isPulling) return;
+      const nx = (e.clientX / window.innerWidth) - 0.5;
+      const ny = (e.clientY / window.innerHeight) - 0.5;
+      scene.style.setProperty("--bell-sway", `${(-nx * 2.2).toFixed(2)}deg`);
+      scene.style.setProperty("--bg-shift-x", `${(-nx * 14).toFixed(1)}px`);
+      scene.style.setProperty("--bg-shift-y", `${(-ny * 9).toFixed(1)}px`);
+    }, { passive: true });
+  }
 
   function openMainWebsite() {
     if (isGateOpened) return;
@@ -645,12 +654,16 @@ function initSindoroGate() {
     document.body.classList.remove("gate-locked");
     animateHeroCounters();
     showToast("Selamat datang di Portal Sejarah & Warisan Dusun Malatan");
+    setTimeout(() => {
+      gate.style.display = "none";
+    }, 950);
   }
 
   function igniteBrightLampAndEnter() {
     if (isLit) return;
     isLit = true;
     isPulling = false;
+    if (rafPullId) cancelAnimationFrame(rafPullId);
     scene.classList.remove("is-pulling", "pull-ready");
     scene.style.setProperty("--bell-sway", "0deg");
     scene.style.setProperty("--pull-y", "0px");
@@ -658,7 +671,7 @@ function initSindoroGate() {
     scene.classList.add("lit");
     gate.classList.add("lamp-lit");
     if (btnText) btnText.textContent = "✨ Lampu Menyala · Memasuki Portal...";
-    setTimeout(openMainWebsite, 1250);
+    setTimeout(openMainWebsite, 1100);
   }
 
   function startPull(clientY, e) {
@@ -681,31 +694,40 @@ function initSindoroGate() {
     const dampedY = rawDelta <= PULL_THRESHOLD
       ? rawDelta
       : PULL_THRESHOLD + (rawDelta - PULL_THRESHOLD) * 0.45;
-    currentPullY = Math.min(105, dampedY);
-    const progress = Math.min(1, currentPullY / PULL_THRESHOLD);
+    currentPullY = Math.min(100, dampedY);
 
-    scene.style.setProperty("--pull-y", `${currentPullY.toFixed(1)}px`);
-    scene.style.setProperty("--pull-progress", progress.toFixed(3));
-    scene.classList.toggle("pull-ready", currentPullY >= PULL_THRESHOLD);
-
-    if (currentPullY >= PULL_THRESHOLD + 24) {
+    if (currentPullY >= PULL_THRESHOLD + 22) {
       igniteBrightLampAndEnter();
       return;
     }
 
-    if (btnText) {
-      if (currentPullY >= PULL_THRESHOLD) {
-        btnText.textContent = "✨ Lepaskan Tarikan Untuk Menyalakan";
-      } else {
-        const pct = Math.max(5, Math.round(progress * 100));
-        btnText.textContent = `↓ Tarik ke Bawah (${pct}%)`;
+    if (rafPullId) return;
+    rafPullId = requestAnimationFrame(() => {
+      rafPullId = null;
+      if (!isPulling || isLit) return;
+      const progress = Math.min(1, currentPullY / PULL_THRESHOLD);
+      scene.style.setProperty("--pull-y", `${currentPullY.toFixed(1)}px`);
+      scene.style.setProperty("--pull-progress", progress.toFixed(2));
+      scene.classList.toggle("pull-ready", currentPullY >= PULL_THRESHOLD);
+
+      if (btnText) {
+        if (currentPullY >= PULL_THRESHOLD) {
+          btnText.textContent = "✨ Lepaskan Tarikan Untuk Menyalakan";
+        } else {
+          const pct = Math.max(5, Math.round(progress * 100));
+          btnText.textContent = `↓ Tarik ke Bawah (${pct}%)`;
+        }
       }
-    }
+    });
   }
 
   function endPull() {
     if (!isPulling || isLit) return;
     isPulling = false;
+    if (rafPullId) {
+      cancelAnimationFrame(rafPullId);
+      rafPullId = null;
+    }
     scene.classList.remove("is-pulling", "pull-ready");
 
     if (currentPullY >= PULL_THRESHOLD) {
@@ -730,14 +752,14 @@ function initSindoroGate() {
     el.addEventListener("keydown", (e) => {
       if (e.code === "ArrowDown" || e.code === "Space" || e.code === "Enter") {
         e.preventDefault();
-        scene.style.setProperty("--pull-y", "52px");
+        scene.style.setProperty("--pull-y", "50px");
         scene.style.setProperty("--pull-progress", "1");
-        setTimeout(igniteBrightLampAndEnter, 240);
+        setTimeout(igniteBrightLampAndEnter, 220);
       }
     });
   });
 
-  window.addEventListener("mousemove", (e) => movePull(e.clientY));
+  window.addEventListener("mousemove", (e) => movePull(e.clientY), { passive: true });
   window.addEventListener("touchmove", (e) => {
     if (isPulling && e.touches && e.touches[0]) {
       if (e.cancelable) e.preventDefault();
@@ -745,9 +767,9 @@ function initSindoroGate() {
     }
   }, { passive: false });
 
-  window.addEventListener("mouseup", endPull);
-  window.addEventListener("touchend", endPull);
-  window.addEventListener("touchcancel", endPull);
+  window.addEventListener("mouseup", endPull, { passive: true });
+  window.addEventListener("touchend", endPull, { passive: true });
+  window.addEventListener("touchcancel", endPull, { passive: true });
 }
 
 function triggerCrossfade(el) {

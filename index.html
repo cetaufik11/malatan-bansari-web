@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Lora:ital,wght@0,500;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261107h" />
+  <link rel="stylesheet" href="styles.css?v=20261107i" />
 </head>
 <body class="gate-locked">
   <!-- SPLASH SCREEN / HALAMAN AWAL: ATMOSPHERIC TWILIGHT SINDORO & 3D BELL SPOTLIGHT -->
@@ -106,15 +106,10 @@
               <stop offset="100%" stop-color="#ffe08a"/>
             </radialGradient>
 
-            <!-- Filter Cahaya Bohlam (Sangat Terang & Bercahaya) -->
-            <filter id="bulbGlow" x="-160%" y="-160%" width="420%" height="420%">
-              <feGaussianBlur stdDeviation="8" result="blur1"/>
-              <feGaussianBlur stdDeviation="22" result="blur2"/>
-              <feGaussianBlur stdDeviation="46" result="blur3"/>
+            <!-- Filter Cahaya Bohlam (Ringan & Cepat di GPU HP/Desktop) -->
+            <filter id="bulbGlow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="10" result="blur1"/>
               <feMerge>
-                <feMergeNode in="blur3"/>
-                <feMergeNode in="blur2"/>
-                <feMergeNode in="blur2"/>
                 <feMergeNode in="blur1"/>
                 <feMergeNode in="SourceGraphic"/>
               </feMerge>
@@ -881,6 +876,6 @@
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="app.js?v=20261107h"></script>
+  <script src="app.js?v=20261107i"></script>
 </body>
 </html>

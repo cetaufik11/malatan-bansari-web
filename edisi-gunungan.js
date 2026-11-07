@@ -248,6 +248,7 @@ const NAV_PAGES = [
 let origamiObserver = null;
 let currentPageIndex = 0;
 let isPageTransitioning = false;
+const IS_MOBILE_DEVICE = window.matchMedia("(max-width: 980px), (pointer: coarse)").matches;
 
 document.addEventListener("DOMContentLoaded", () => {
   initKayonSplitGate();
@@ -263,8 +264,10 @@ document.addEventListener("DOMContentLoaded", () => {
   initReferences();
   initBidirectionalOrigamiScroll();
   initRigenShutterMultiPage();
-  initFloating3DRigenStage();
-  initInteractiveDiorama3D();
+  if (!IS_MOBILE_DEVICE) {
+    initFloating3DRigenStage();
+    initInteractiveDiorama3D();
+  }
   initDetailPopupModal();
 
   document.getElementById("printArchiveBtn")?.addEventListener("click", () => {
@@ -287,17 +290,20 @@ function initKayonSplitGate() {
   let isPulling = false;
   let startY = 0;
   let currentPullY = 0;
-  const PULL_THRESHOLD = 46; // Jarak tarik ke bawah (px) agar saklar lampu menyala
+  let rafPullId = null;
+  const PULL_THRESHOLD = 44; // Jarak tarik ke bawah (px) agar saklar lampu menyala
 
-  // Smooth interactive parallax on mouse move when not pulling
-  scene.addEventListener("pointermove", (e) => {
-    if (isLit || isPulling) return;
-    const nx = (e.clientX / window.innerWidth) - 0.5;
-    const ny = (e.clientY / window.innerHeight) - 0.5;
-    scene.style.setProperty("--bell-sway", `${(-nx * 2.2).toFixed(2)}deg`);
-    scene.style.setProperty("--bg-shift-x", `${(-nx * 14).toFixed(1)}px`);
-    scene.style.setProperty("--bg-shift-y", `${(-ny * 9).toFixed(1)}px`);
-  });
+  // Smooth interactive parallax on desktop mouse move when not pulling
+  if (!IS_MOBILE_DEVICE) {
+    scene.addEventListener("pointermove", (e) => {
+      if (isLit || isPulling) return;
+      const nx = (e.clientX / window.innerWidth) - 0.5;
+      const ny = (e.clientY / window.innerHeight) - 0.5;
+      scene.style.setProperty("--bell-sway", `${(-nx * 2.2).toFixed(2)}deg`);
+      scene.style.setProperty("--bg-shift-x", `${(-nx * 14).toFixed(1)}px`);
+      scene.style.setProperty("--bg-shift-y", `${(-ny * 9).toFixed(1)}px`);
+    }, { passive: true });
+  }
 
   function openGateIntoMainContent() {
     if (isGateOpened) return;
@@ -305,12 +311,17 @@ function initKayonSplitGate() {
     gate.classList.add("gate-opened");
     document.body.classList.remove("gate-locked");
     showToast("Selamat datang di Portal Sejarah & Warisan Dusun Malatan");
+    // Hapus penuh elemen gate dari render tree setelah animasi selesai agar GPU HP 100% ringan
+    setTimeout(() => {
+      gate.style.display = "none";
+    }, 950);
   }
 
   function igniteBrightLampAndEnter() {
     if (isLit) return;
     isLit = true;
     isPulling = false;
+    if (rafPullId) cancelAnimationFrame(rafPullId);
     scene.classList.remove("is-pulling", "pull-ready");
     scene.style.setProperty("--bell-sway", "0deg");
     scene.style.setProperty("--pull-y", "0px");
@@ -318,7 +329,7 @@ function initKayonSplitGate() {
     scene.classList.add("lit");
     gate.classList.add("lamp-lit");
     if (btnText) btnText.textContent = "✨ Lampu Menyala · Memasuki Portal...";
-    setTimeout(openGateIntoMainContent, 1250);
+    setTimeout(openGateIntoMainContent, 1100);
   }
 
   function startPull(clientY, e) {
@@ -338,42 +349,48 @@ function initKayonSplitGate() {
   function movePull(clientY) {
     if (!isPulling || isLit) return;
     const rawDelta = Math.max(0, clientY - startY);
-    // Elastic damping past threshold
     const dampedY = rawDelta <= PULL_THRESHOLD
       ? rawDelta
       : PULL_THRESHOLD + (rawDelta - PULL_THRESHOLD) * 0.45;
-    currentPullY = Math.min(105, dampedY);
-    const progress = Math.min(1, currentPullY / PULL_THRESHOLD);
+    currentPullY = Math.min(100, dampedY);
 
-    scene.style.setProperty("--pull-y", `${currentPullY.toFixed(1)}px`);
-    scene.style.setProperty("--pull-progress", progress.toFixed(3));
-    scene.classList.toggle("pull-ready", currentPullY >= PULL_THRESHOLD);
-
-    if (currentPullY >= PULL_THRESHOLD + 24) {
-      // Otomatis klik saklar begitu ditarik cukup jauh ke bawah
+    if (currentPullY >= PULL_THRESHOLD + 22) {
       igniteBrightLampAndEnter();
       return;
     }
 
-    if (btnText) {
-      if (currentPullY >= PULL_THRESHOLD) {
-        btnText.textContent = "✨ Lepaskan Tarikan Untuk Menyalakan";
-      } else {
-        const pct = Math.max(5, Math.round(progress * 100));
-        btnText.textContent = `↓ Tarik ke Bawah (${pct}%)`;
+    if (rafPullId) return;
+    rafPullId = requestAnimationFrame(() => {
+      rafPullId = null;
+      if (!isPulling || isLit) return;
+      const progress = Math.min(1, currentPullY / PULL_THRESHOLD);
+      scene.style.setProperty("--pull-y", `${currentPullY.toFixed(1)}px`);
+      scene.style.setProperty("--pull-progress", progress.toFixed(2));
+      scene.classList.toggle("pull-ready", currentPullY >= PULL_THRESHOLD);
+
+      if (btnText) {
+        if (currentPullY >= PULL_THRESHOLD) {
+          btnText.textContent = "✨ Lepaskan Tarikan Untuk Menyalakan";
+        } else {
+          const pct = Math.max(5, Math.round(progress * 100));
+          btnText.textContent = `↓ Tarik ke Bawah (${pct}%)`;
+        }
       }
-    }
+    });
   }
 
   function endPull() {
     if (!isPulling || isLit) return;
     isPulling = false;
+    if (rafPullId) {
+      cancelAnimationFrame(rafPullId);
+      rafPullId = null;
+    }
     scene.classList.remove("is-pulling", "pull-ready");
 
     if (currentPullY >= PULL_THRESHOLD) {
       igniteBrightLampAndEnter();
     } else {
-      // Belum ditarik cukup jauh (misal hanya diklik): pantulkan kembali ke atas
       scene.style.setProperty("--pull-y", "0px");
       scene.style.setProperty("--pull-progress", "0");
       scene.classList.remove("pull-hint-bounce");
@@ -393,14 +410,14 @@ function initKayonSplitGate() {
     el.addEventListener("keydown", (e) => {
       if (e.code === "ArrowDown" || e.code === "Space" || e.code === "Enter") {
         e.preventDefault();
-        scene.style.setProperty("--pull-y", "52px");
+        scene.style.setProperty("--pull-y", "50px");
         scene.style.setProperty("--pull-progress", "1");
-        setTimeout(igniteBrightLampAndEnter, 240);
+        setTimeout(igniteBrightLampAndEnter, 220);
       }
     });
   });
 
-  window.addEventListener("mousemove", (e) => movePull(e.clientY));
+  window.addEventListener("mousemove", (e) => movePull(e.clientY), { passive: true });
   window.addEventListener("touchmove", (e) => {
     if (isPulling && e.touches && e.touches[0]) {
       if (e.cancelable) e.preventDefault();
@@ -408,9 +425,9 @@ function initKayonSplitGate() {
     }
   }, { passive: false });
 
-  window.addEventListener("mouseup", endPull);
-  window.addEventListener("touchend", endPull);
-  window.addEventListener("touchcancel", endPull);
+  window.addEventListener("mouseup", endPull, { passive: true });
+  window.addEventListener("touchend", endPull, { passive: true });
+  window.addEventListener("touchcancel", endPull, { passive: true });
 }
 
 // 2. 10-Slat 3D Bamboo Rigen Louver Shutter & Multi-Page Navigation
@@ -424,10 +441,12 @@ function initRigenShutterMultiPage() {
   const topbarChapter = document.getElementById("topbarActiveChapter");
 
   if (slatsGrid) {
+    const slatCount = IS_MOBILE_DEVICE ? 5 : 10;
+    const mid = (slatCount - 1) / 2;
     let slatsHtml = "";
-    for (let i = 0; i < 10; i++) {
-      const distFromCenter = Math.abs(i - 4.5);
-      const delay = Math.round(distFromCenter * 38);
+    for (let i = 0; i < slatCount; i++) {
+      const distFromCenter = Math.abs(i - mid);
+      const delay = Math.round(distFromCenter * (IS_MOBILE_DEVICE ? 24 : 38));
       slatsHtml += `<div class="rigen-slat" style="--slat-delay:${delay}ms;"></div>`;
     }
     slatsGrid.innerHTML = slatsHtml;
@@ -466,12 +485,8 @@ function initRigenShutterMultiPage() {
     const activeSection = document.getElementById(activePage.id);
     if (activeSection) {
       activeSection.querySelectorAll(".origami-anim").forEach((el) => {
-        el.classList.remove("unfolded", "fold-top");
-        el.classList.add("fold-bottom");
-        setTimeout(() => {
-          el.classList.add("unfolded");
-          el.classList.remove("fold-bottom");
-        }, 70);
+        el.classList.add("unfolded");
+        el.classList.remove("fold-bottom", "fold-top");
       });
     }
   }
@@ -484,18 +499,22 @@ function initRigenShutterMultiPage() {
     const targetPage = NAV_PAGES[targetIndex];
     if (titleEl) titleEl.textContent = targetPage.label;
 
+    const swapTime = IS_MOBILE_DEVICE ? 360 : 540;
+    const openTime = IS_MOBILE_DEVICE ? 440 : 660;
+    const doneTime = IS_MOBILE_DEVICE ? 820 : 1180;
+
     curtain.classList.remove("shutter-reset", "shutter-opening");
     void curtain.offsetWidth;
     curtain.classList.add("shutter-closing");
 
     setTimeout(() => {
       updatePageUi(targetIndex);
-    }, 540);
+    }, swapTime);
 
     setTimeout(() => {
       curtain.classList.remove("shutter-closing");
       curtain.classList.add("shutter-opening");
-    }, 660);
+    }, openTime);
 
     setTimeout(() => {
       curtain.classList.add("shutter-reset");
@@ -505,7 +524,7 @@ function initRigenShutterMultiPage() {
         curtain.classList.remove("shutter-reset");
         isPageTransitioning = false;
       }, 30);
-    }, 1180);
+    }, doneTime);
   }
 
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
@@ -538,7 +557,7 @@ function initRigenShutterMultiPage() {
   updatePageUi(0);
 }
 
-// 3. Bidirectional 3D Origami Unfold Scroll Animation
+// 3. Bidirectional 3D Origami Unfold Scroll Animation (Dioptimalkan agar 60fps di HP)
 function initBidirectionalOrigamiScroll() {
   origamiObserver = new IntersectionObserver(
     (entries) => {
@@ -547,7 +566,10 @@ function initBidirectionalOrigamiScroll() {
         if (entry.isIntersecting) {
           el.classList.add("unfolded");
           el.classList.remove("fold-bottom", "fold-top");
-        } else {
+          if (IS_MOBILE_DEVICE) {
+            origamiObserver.unobserve(el);
+          }
+        } else if (!IS_MOBILE_DEVICE) {
           el.classList.remove("unfolded");
           if (entry.boundingClientRect.top < 0) {
             el.classList.add("fold-top");
@@ -559,7 +581,7 @@ function initBidirectionalOrigamiScroll() {
         }
       });
     },
-    { threshold: 0.12, rootMargin: "-25px 0px -25px 0px" }
+    { threshold: 0.08, rootMargin: "0px 0px -15px 0px" }
   );
 
   registerOrigamiTargets();

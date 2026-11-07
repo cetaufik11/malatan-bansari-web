@@ -2049,15 +2049,108 @@ h1, h2, h3, .serif {
   font-weight: 600;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 980px), (pointer: coarse) {
   .studio-layout {
     grid-template-columns: 1fr;
   }
   .babad-sidebar {
     position: relative;
     height: auto;
+    backdrop-filter: none;
   }
   .bento-hero-grid, .map-explorer-grid, .qa-layout, .oral-grid {
     grid-template-columns: 1fr;
   }
+  .babad-stage-main {
+    padding: 16px 16px 36px;
+    perspective: none;
+  }
+
+  /* Optimasi Performa GPU HP (Anti-Lag & 60fps Smooth Scrolling) */
+  .bento-main-card,
+  .bento-side-card,
+  .section-header,
+  .timeline-card,
+  .map-canvas-box,
+  .map-detail-panel,
+  .archive-card,
+  .peace-card,
+  .tab-panel,
+  .ref-item,
+  .page-pager-dock,
+  .glow-btn,
+  .bell-caption-kicker,
+  .ui-popup-backdrop {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .Floating3DCultureStage,
+  .bell-mist-drift,
+  .bell-fireflies {
+    display: none !important;
+  }
+
+  .seal-orbit-svg,
+  .bell-bg-panorama {
+    animation: none !important;
+  }
+
+  .bell-bg-panorama {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .bell-svg,
+  .bell-scene.lit .bell-svg,
+  .bell-scene.lit .svg-inner-lit {
+    filter: none !important;
+  }
+
+  .bell-scene.lit .svg-clapper-lit {
+    filter: url(#bulbGlow) !important;
+  }
+
+  .spotlight {
+    width: 340px;
+    height: 240px;
+    filter: blur(16px);
+  }
+
+  .spotlight-core {
+    width: 210px;
+    height: 160px;
+    filter: blur(8px);
+  }
+
+  .rigen-slats-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .mist-wave {
+    display: none !important;
+  }
+
+  .page-section.active-page {
+    animation: mobileFadePageIn 0.32s ease-out both;
+  }
+
+  .origami-anim {
+    will-change: auto;
+    transition: transform 0.38s ease-out, opacity 0.35s ease-out;
+  }
+
+  .origami-anim.fold-bottom,
+  .origami-anim.fold-top {
+    transform: translate3d(0, 18px, 0);
+  }
+
+  .origami-anim.unfolded {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes mobileFadePageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

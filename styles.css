@@ -1599,26 +1599,23 @@ h1, h2, h3, .serif {
    ========================================================================= */
 .scroll-anim {
   opacity: 0;
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
   transition:
-    opacity 0.68s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.68s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.68s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: var(--anim-delay, 0ms);
 }
 
 /* State when element is below viewport (waiting to be scrolled DOWN into view) */
 .scroll-anim.out-bottom {
   opacity: 0;
-  transform: translate3d(0, 46px, 0) scale(0.96);
-  filter: blur(4px);
+  transform: translate3d(0, 32px, 0);
 }
 
 /* State when element is above viewport (waiting to be scrolled UP into view) */
 .scroll-anim.out-top {
   opacity: 0;
-  transform: translate3d(0, -42px, 0) scale(0.96);
-  filter: blur(4px);
+  transform: translate3d(0, -28px, 0);
 }
 
 /* Directional variants */
@@ -2757,7 +2754,7 @@ h1, h2, h3, .serif {
   }
 }
 
-@media (max-width: 920px) {
+@media (max-width: 920px), (pointer: coarse) {
   .hero-grid, .map-explorer-grid, .qa-layout, .oral-grid {
     grid-template-columns: 1fr;
   }
@@ -2769,7 +2766,71 @@ h1, h2, h3, .serif {
     gap: 12px;
     white-space: nowrap;
   }
-  .tobacco-3d-plant:nth-child(n+4) {
-    display: none;
+
+  /* Optimasi Performa GPU HP (Anti-Lag & 60fps Smooth Scrolling) */
+  .navbar,
+  .hero h1,
+  .section-header,
+  .hero-card,
+  .stat-item,
+  .timeline-card,
+  .archive-card,
+  .peace-card,
+  .map-canvas-box,
+  .map-detail-panel,
+  .tab-panel,
+  .ref-item,
+  .page-pager-dock,
+  .glow-btn,
+  .bell-caption-kicker,
+  .ui-popup-backdrop {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .tobacco-3d-garden,
+  .bell-mist-drift,
+  .bell-fireflies {
+    display: none !important;
+  }
+
+  .bansari-ring-svg,
+  .bell-bg-panorama,
+  .specimen-3d-turntable {
+    animation: none !important;
+  }
+
+  .bansari-emblem-wrap,
+  .bell-svg,
+  .bell-scene.lit .bell-svg,
+  .bell-scene.lit .svg-inner-lit,
+  .tobacco-leaf-item {
+    filter: none !important;
+  }
+
+  .bell-bg-panorama {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .bell-scene.lit .svg-clapper-lit {
+    filter: url(#bulbGlow) !important;
+  }
+
+  .spotlight {
+    width: 340px;
+    height: 240px;
+    filter: blur(16px);
+  }
+
+  .spotlight-core {
+    width: 210px;
+    height: 160px;
+    filter: blur(8px);
+  }
+
+  .scroll-anim {
+    will-change: auto;
+    transition: opacity 0.35s ease-out, transform 0.38s ease-out;
   }
 }
